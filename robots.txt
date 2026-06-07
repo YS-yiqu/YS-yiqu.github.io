@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://ys-yiqu.github.io/sitemap.xml
