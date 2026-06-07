@@ -85,3 +85,55 @@
 .post-content { font-size: 15px !important; line-height: 1.8 !important; color: #333 !important; }
 .post-meta { font-size: 13px !important; color: #999 !important; }
 .pagination { margin: 24px 0 !important; }
+
+/* ====== 归档页 pdpeng 风格 ====== */
+
+/* 归档顶部统计 */
+.archives .page-header + p {
+    font-size: 14px !important;
+    color: #666 !important;
+    margin: 0 0 24px !important;
+}
+
+/* 年份标题 */
+.archive-year > h2 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    margin: 24px 0 8px !important;
+}
+
+/* 隐藏月份标题 */
+.archive-month > h3 {
+    display: none !important;
+}
+
+/* 归档条目 - flex 行 */
+.archive-entry {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 12px !important;
+    padding: 2px 0 !important;
+}
+
+/* 日期 MM-DD 格式 */
+.archive-entry time,
+.archive-meta {
+    font-family: 'Consolas', 'Courier New', monospace !important;
+    font-size: 14px !important;
+    color: #888 !important;
+    white-space: nowrap !important;
+    min-width: 60px !important;
+    flex-shrink: 0 !important;
+}
+
+/* 标题链接 */
+.archive-entry a {
+    font-size: 15px !important;
+    color: #333 !important;
+    text-decoration: none !important;
+}
+
+.archive-entry a:hover {
+    color: #2d8cf0 !important;
+}
