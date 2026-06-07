@@ -1,66 +1,78 @@
 /* 
- * jiajunhuang.com 风格
+ * jiajunhuang.com 风格 - 纯 CSS 实现
+ * 不改 PaperMod 模板，只覆盖样式
  */
 
-/* 首页介绍 */
-.home-info {
-    margin: 0 0 24px 0 !important;
+/* 文章卡片变成一行：日期 + 标题 */
+.post-entry {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: baseline !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 3px 0 !important;
+    margin: 0 !important;
+    gap: 12px !important;
+}
+
+/* 标题在前 */
+.post-entry .entry-header {
+    order: 2 !important;
+    margin: 0 !important;
     padding: 0 !important;
+    flex: 1 !important;
 }
 
-.home-info h1 {
-    font-size: 20px !important;
-    font-weight: 500 !important;
+.post-entry .entry-header .entry-title {
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+}
+
+.post-entry .entry-header .entry-title a {
     color: #333 !important;
+    text-decoration: none !important;
 }
 
-.home-info p {
+.post-entry .entry-header .entry-title a:hover {
+    color: #2d8cf0 !important;
+}
+
+/* 日期显示在标题前 */
+.post-entry .entry-footer {
+    order: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-family: 'Consolas', 'Courier New', monospace !important;
     font-size: 14px !important;
-    color: #666 !important;
-    line-height: 1.6 !important;
+    color: #888 !important;
+    white-space: nowrap !important;
+    min-width: 85px !important;
+    flex-shrink: 0 !important;
+    background: none !important;
 }
 
-/* 文章列表 */
-.posts-list {
-    margin: 0;
-    padding: 0;
+/* 隐藏封面、摘要、标签 */
+.post-entry .entry-cover,
+.post-entry .entry-content,
+.post-entry .entry-footer span:not(:first-child),
+.post-entry .entry-footer a,
+.post-entry .entry-footer .tags-label {
+    display: none !important;
 }
 
-.post-item {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 3px 0;
-    line-height: 1.6;
-}
-
-.post-item time {
-    font-family: 'Consolas', 'Courier New', 'SF Mono', monospace;
-    font-size: 14px;
-    color: #888;
-    white-space: nowrap;
-    min-width: 85px;
-    flex-shrink: 0;
-}
-
-.post-item a {
-    font-size: 15px;
-    color: #333;
-    text-decoration: none;
-}
-
-.post-item a:hover {
-    color: #2d8cf0;
-}
-
-/* 主内容区宽度 */
-.main {
+/* 主内容区窄 */
+.main,
+.nav,
+.footer {
     max-width: 720px !important;
 }
 
-/* 导航栏 */
+/* 导航简约 */
 .nav {
-    max-width: 720px !important;
     padding: 12px 0 !important;
 }
 
@@ -79,9 +91,20 @@
     color: #2d8cf0 !important;
 }
 
+/* 首页标题 */
+.home-info {
+    margin: 0 0 16px 0 !important;
+    padding: 0 !important;
+}
+
+.home-info h1 {
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    color: #333 !important;
+}
+
 /* 页脚 */
 .footer {
-    max-width: 720px !important;
     padding: 20px 0 !important;
 }
 
@@ -112,12 +135,7 @@
     font-size: 13px !important;
 }
 
-/* 隐藏 PaperMod 默认卡片 */
-.post-entry {
-    display: none !important;
-}
-
-/* 分页 */
+/* 分页简约 */
 .pagination {
     margin: 24px 0 !important;
 }
