@@ -1,0 +1,35 @@
+{{- define "main" }}
+{{- if .Params.homeInfoParams }}
+<div class="home-info">
+  <h1>{{ .Params.homeInfoParams.Title }}</h1>
+  {{- with .Params.homeInfoParams.Content }}
+  <p>{{ . | markdownify }}</p>
+  {{- end }}
+</div>
+{{- else if .Site.Params.homeInfoParams }}
+<div class="home-info">
+  <h1>{{ .Site.Params.homeInfoParams.Title }}</h1>
+  {{- with .Site.Params.homeInfoParams.Content }}
+  <p>{{ . | markdownify }}</p>
+  {{- end }}
+</div>
+{{- end }}
+
+{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+{{- $paginator := .Paginate $pages }}
+
+<div class="posts-list">
+  {{- range $paginator.Pages }}
+  <div class="post-item">
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </div>
+  {{- end }}
+</div>
+
+{{- if gt $paginator.TotalPages 1 }}
+<footer class="page-footer">
+  {{ template "_internal/pagination.html" . }}
+</footer>
+{{- end }}
+{{- end }}

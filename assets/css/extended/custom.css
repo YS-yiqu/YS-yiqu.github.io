@@ -1,46 +1,69 @@
 /* 
- * jiajunhuang.com 风格覆盖
+ * jiajunhuang.com 风格
  */
 
-/* 主页列表 - 紧凑无边框 */
-.post-entry {
-    background: none !important;
-    border: none !important;
-    padding: 2px 0 !important;
-    margin: 0 !important;
+/* 首页介绍 */
+.home-info {
+    margin: 0 0 24px 0 !important;
+    padding: 0 !important;
 }
 
-/* 日期 - 灰色等宽，在标题前 */
-.post-entry .entry-header .entry-title {
-    display: inline !important;
-    font-size: 15px !important;
-    font-weight: 400 !important;
-}
-
-.post-entry .entry-header .entry-title a {
+.home-info h1 {
+    font-size: 20px !important;
+    font-weight: 500 !important;
     color: #333 !important;
-    text-decoration: none !important;
 }
 
-.post-entry .entry-header .entry-title a:hover {
-    color: #2d8cf0 !important;
+.home-info p {
+    font-size: 14px !important;
+    color: #666 !important;
+    line-height: 1.6 !important;
 }
 
-/* 隐藏封面、摘要、页脚 */
-.post-entry .entry-cover,
-.post-entry .entry-content,
-.post-entry .entry-footer {
-    display: none !important;
+/* 文章列表 */
+.posts-list {
+    margin: 0;
+    padding: 0;
 }
 
-/* 主内容区 */
-.main,
-.nav,
-.footer {
+.post-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 3px 0;
+    line-height: 1.6;
+}
+
+.post-item time {
+    font-family: 'Consolas', 'Courier New', 'SF Mono', monospace;
+    font-size: 14px;
+    color: #888;
+    white-space: nowrap;
+    min-width: 85px;
+    flex-shrink: 0;
+}
+
+.post-item a {
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.post-item a:hover {
+    color: #2d8cf0;
+}
+
+/* 主内容区宽度 */
+.main {
     max-width: 720px !important;
 }
 
-/* 导航简约 */
+/* 导航栏 */
+.nav {
+    max-width: 720px !important;
+    padding: 12px 0 !important;
+}
+
 .nav .logo a {
     font-size: 18px !important;
     font-weight: 500 !important;
@@ -52,29 +75,22 @@
     color: #666 !important;
 }
 
-.nav .menu a:hover,
-.nav .menu a.active {
+.nav .menu a:hover {
     color: #2d8cf0 !important;
 }
 
-/* 首页头部 */
-.home-info {
-    margin: 0 0 16px 0 !important;
-    padding: 0 !important;
-}
-
-.home-info h1 {
-    font-size: 20px !important;
-    font-weight: 500 !important;
-}
-
 /* 页脚 */
+.footer {
+    max-width: 720px !important;
+    padding: 20px 0 !important;
+}
+
 .footer span {
     font-size: 13px !important;
     color: #999 !important;
 }
 
-/* 文章内部 */
+/* 文章页 */
 .post-title {
     font-size: 24px !important;
     font-weight: 500 !important;
@@ -91,7 +107,17 @@
     color: #333 !important;
 }
 
+.post-content pre {
+    border-radius: 4px !important;
+    font-size: 13px !important;
+}
+
+/* 隐藏 PaperMod 默认卡片 */
+.post-entry {
+    display: none !important;
+}
+
 /* 分页 */
 .pagination {
-    margin: 20px 0 !important;
+    margin: 24px 0 !important;
 }
