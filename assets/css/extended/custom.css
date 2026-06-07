@@ -1,32 +1,38 @@
 /* 
- * Hexo NexT 主题风格
+ * jiajunhuang.com 极简风格
+ * 纯 CSS，不动模板
  */
 
-/* 文章卡片 */
+/* 文章卡片改为 flex 行，日期+标题同行 */
 .post-entry {
-    background: #fff !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    background: none !important;
     border: none !important;
     border-radius: 0 !important;
-    padding: 20px 0 !important;
+    padding: 3px 0 !important;
     margin: 0 !important;
-    border-bottom: 1px solid #eee !important;
-    display: block !important;
+    gap: 12px !important;
 }
 
-.post-entry:last-child {
-    border-bottom: none !important;
+/* 标题 */
+.post-entry .entry-header {
+    order: 2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 1 !important;
 }
 
-/* 日期 */
 .post-entry .entry-header .entry-title {
-    font-size: 20px !important;
-    font-weight: 500 !important;
-    margin: 0 0 8px !important;
-    line-height: 1.4 !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    line-height: 1.6 !important;
 }
 
 .post-entry .entry-header .entry-title a {
-    color: #222 !important;
+    color: #333 !important;
     text-decoration: none !important;
 }
 
@@ -34,99 +40,93 @@
     color: #2d8cf0 !important;
 }
 
-/* 文章元信息 - 日期、分类、阅读时间 */
+/* 日期 - flex 放在标题前 */
 .post-entry .entry-footer {
-    font-size: 13px !important;
-    color: #999 !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 0 12px !important;
-}
-
-.post-entry .entry-footer a {
-    color: #999 !important;
-}
-
-.post-entry .entry-footer a:hover {
-    color: #2d8cf0 !important;
-}
-
-/* 摘要 */
-.post-entry .entry-content {
-    font-size: 14px !important;
-    line-height: 1.8 !important;
-    color: #555 !important;
+    order: 1 !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    font-family: 'Consolas', 'Courier New', monospace !important;
+    font-size: 14px !important;
+    color: #888 !important;
+    white-space: nowrap !important;
+    min-width: 85px !important;
+    flex-shrink: 0 !important;
 }
 
-/* 隐藏封面 */
-.post-entry .entry-cover {
+/* 隐藏封面、摘要 */
+.post-entry .entry-cover,
+.post-entry .entry-content {
     display: none !important;
 }
 
-/* 主内容宽度 */
+/* 隐藏 footer 里的标签等多余内容 */
+.post-entry .entry-footer span:not(:first-child),
+.post-entry .entry-footer a {
+    display: none !important;
+}
+
+/* 主内容窄 */
 .main,
 .nav,
 .footer {
-    max-width: 780px !important;
+    max-width: 720px !important;
 }
 
-/* 导航 */
+/* 导航简约 */
 .nav {
-    padding: 16px 0 !important;
+    padding: 12px 0 !important;
 }
 
 .nav .logo a {
-    font-size: 22px !important;
-    font-weight: 600 !important;
-    color: #222 !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    color: #333 !important;
 }
 
 .nav .menu a {
     font-size: 14px !important;
-    color: #555 !important;
+    color: #666 !important;
 }
 
 .nav .menu a:hover {
     color: #2d8cf0 !important;
 }
 
-/* 首页头部 */
+/* 首页标题 "文章" */
 .home-info {
-    margin: 0 0 24px 0 !important;
+    margin: 0 0 16px 0 !important;
     padding: 0 !important;
 }
 
 .home-info h1 {
-    font-size: 22px !important;
-    font-weight: 600 !important;
-    color: #222 !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    color: #333 !important;
     margin: 0 !important;
-}
-
-.home-info p {
-    font-size: 14px !important;
-    color: #888 !important;
-    margin: 4px 0 0 !important;
 }
 
 /* 页脚 */
 .footer {
-    padding: 24px 0 !important;
-    text-align: center !important;
+    padding: 20px 0 !important;
 }
 
 .footer span {
     font-size: 13px !important;
-    color: #bbb !important;
+    color: #999 !important;
 }
 
 /* 文章页 */
 .post-title {
-    font-size: 26px !important;
-    font-weight: 600 !important;
-    color: #222 !important;
+    font-size: 24px !important;
+    font-weight: 500 !important;
+}
+
+.post-content {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    color: #333 !important;
 }
 
 .post-meta {
@@ -134,20 +134,7 @@
     color: #999 !important;
 }
 
-.post-content {
-    font-size: 15px !important;
-    line-height: 1.9 !important;
-    color: #333 !important;
-}
-
-.post-content pre {
-    border-radius: 3px !important;
-    font-size: 13px !important;
-    background: #f6f8fa !important;
-}
-
 /* 分页 */
 .pagination {
     margin: 24px 0 !important;
-    text-align: center !important;
 }

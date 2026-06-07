@@ -25,20 +25,20 @@ paginate = 10
 
   dateFormat = "2006-01-02"
 
-  # NexT 风格 - 显示完整文章信息
-  ShowReadingTime = true
-  ShowWordCount = true
+  # jiajunhuang 极简风格
+  ShowReadingTime = false
+  ShowWordCount = false
   ShowShareButtons = false
   ShowPostNavLinks = true
-  ShowBreadCrumbs = true
+  ShowBreadCrumbs = false
   ShowCodeCopyButtons = true
-  ShowRssButtonInSectionTermList = true
+  ShowRssButtonInSectionTermList = false
   UseHugoToc = true
-  disableSpecial1stPost = false
+  disableSpecial1stPost = true
   disableScrollToTop = false
   comments = false
   hidemeta = false
-  hideSummary = false
+  hideSummary = true
   showtoc = true
   tocopen = false
 
