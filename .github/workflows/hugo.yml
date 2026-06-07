@@ -35,10 +35,10 @@ jobs:
           hugo-version: "latest"
           extended: true
 
-      - name: Init Hugo modules
+      - name: Download PaperMod theme
         run: |
-          hugo mod init ys-yiqu.github.io
-          hugo mod get
+          mkdir -p themes
+          git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
 
       - name: Build
         run: hugo --minify
