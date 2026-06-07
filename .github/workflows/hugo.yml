@@ -35,6 +35,11 @@ jobs:
           hugo-version: "latest"
           extended: true
 
+      - name: Init Hugo modules
+        run: |
+          hugo mod init ys-yiqu.github.io
+          hugo mod get
+
       - name: Build
         run: hugo --minify
 

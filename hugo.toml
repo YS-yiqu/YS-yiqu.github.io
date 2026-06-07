@@ -6,6 +6,11 @@ defaultContentLanguage = "zh-cn"
 hasCJKLanguage = true
 enableEmoji = true
 enableRobotsTXT = true
+disableHugoGeneratorInject = true
+
+[module]
+  [[module.imports]]
+    path = "github.com/adityatelange/hugo-PaperMod"
 
 paginate = 30
 
