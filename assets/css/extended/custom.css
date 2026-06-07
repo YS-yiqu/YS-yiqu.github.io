@@ -1,9 +1,5 @@
-/* 
- * jiajunhuang.com 极简风格
- * 纯 CSS，不动模板
- */
+/* jiajunhuang.com 极简风格 */
 
-/* 文章卡片改为 flex 行，日期+标题同行 */
 .post-entry {
     display: flex !important;
     flex-direction: row !important;
@@ -16,7 +12,7 @@
     gap: 12px !important;
 }
 
-/* 标题 */
+/* 标题放后面 */
 .post-entry .entry-header {
     order: 2 !important;
     margin: 0 !important;
@@ -24,23 +20,23 @@
     flex: 1 !important;
 }
 
-.post-entry .entry-header .entry-title {
+.post-entry .entry-header .entry-hint-parent {
     font-size: 15px !important;
     font-weight: 400 !important;
     margin: 0 !important;
     line-height: 1.6 !important;
 }
 
-.post-entry .entry-header .entry-title a {
+.post-entry .entry-header .entry-hint-parent a {
     color: #333 !important;
     text-decoration: none !important;
 }
 
-.post-entry .entry-header .entry-title a:hover {
+.post-entry .entry-header .entry-hint-parent a:hover {
     color: #2d8cf0 !important;
 }
 
-/* 日期 - flex 放在标题前 */
+/* 日期放前面 */
 .post-entry .entry-footer {
     order: 1 !important;
     margin: 0 !important;
@@ -55,86 +51,37 @@
     flex-shrink: 0 !important;
 }
 
-/* 隐藏封面、摘要 */
-.post-entry .entry-cover,
-.post-entry .entry-content {
-    display: none !important;
+/* 只显示日期，隐藏作者 */
+.post-entry .entry-footer span:first-of-type {
+    display: inline !important;
 }
-
-/* 隐藏 footer 里的标签等多余内容 */
-.post-entry .entry-footer span:not(:first-child),
+.post-entry .entry-footer span:not(:first-of-type),
 .post-entry .entry-footer a {
     display: none !important;
 }
 
-/* 主内容窄 */
-.main,
-.nav,
-.footer {
-    max-width: 720px !important;
+/* 隐藏封面、摘要、链接遮罩 */
+.post-entry .entry-cover,
+.post-entry .entry-content,
+.post-entry .entry-link {
+    display: none !important;
 }
 
-/* 导航简约 */
-.nav {
-    padding: 12px 0 !important;
-}
+/* 窄 */
+.main, .nav, .footer { max-width: 720px !important; }
 
-.nav .logo a {
-    font-size: 18px !important;
-    font-weight: 500 !important;
-    color: #333 !important;
-}
+.nav { padding: 12px 0 !important; }
+.nav .logo a { font-size: 18px !important; font-weight: 500 !important; color: #333 !important; }
+.nav .menu a { font-size: 14px !important; color: #666 !important; }
+.nav .menu a:hover { color: #2d8cf0 !important; }
 
-.nav .menu a {
-    font-size: 14px !important;
-    color: #666 !important;
-}
+.home-info { margin: 0 0 16px 0 !important; padding: 0 !important; }
+.home-info h1 { font-size: 20px !important; font-weight: 500 !important; color: #333 !important; }
 
-.nav .menu a:hover {
-    color: #2d8cf0 !important;
-}
+.footer { padding: 20px 0 !important; }
+.footer span { font-size: 13px !important; color: #999 !important; }
 
-/* 首页标题 "文章" */
-.home-info {
-    margin: 0 0 16px 0 !important;
-    padding: 0 !important;
-}
-
-.home-info h1 {
-    font-size: 20px !important;
-    font-weight: 500 !important;
-    color: #333 !important;
-    margin: 0 !important;
-}
-
-/* 页脚 */
-.footer {
-    padding: 20px 0 !important;
-}
-
-.footer span {
-    font-size: 13px !important;
-    color: #999 !important;
-}
-
-/* 文章页 */
-.post-title {
-    font-size: 24px !important;
-    font-weight: 500 !important;
-}
-
-.post-content {
-    font-size: 15px !important;
-    line-height: 1.8 !important;
-    color: #333 !important;
-}
-
-.post-meta {
-    font-size: 13px !important;
-    color: #999 !important;
-}
-
-/* 分页 */
-.pagination {
-    margin: 24px 0 !important;
-}
+.post-title { font-size: 24px !important; font-weight: 500 !important; }
+.post-content { font-size: 15px !important; line-height: 1.8 !important; color: #333 !important; }
+.post-meta { font-size: 13px !important; color: #999 !important; }
+.pagination { margin: 24px 0 !important; }
