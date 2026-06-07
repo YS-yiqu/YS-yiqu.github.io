@@ -7,9 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: "pages"
@@ -30,6 +28,11 @@ jobs:
         with:
           hugo-version: "latest"
           extended: true
+
+      - name: Clone theme
+        run: |
+          mkdir -p themes
+          git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
 
       - name: Build
         run: hugo --minify
