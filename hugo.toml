@@ -14,20 +14,9 @@ paginate = 30
   description = "记录成长和学习记录"
   author = "文羿超"
   keywords = ["Blog", "技术博客"]
-
-  # 主页 - jiajunhuang 风格
-  homeInfoParams = {
-    Title = "文章",
-    Content = ""
-  }
-
-  socialIcons = [
-    { name = "github", url = "https://github.com/YS-yiqu" }
-  ]
-
+  homeInfoParams.Title = "文章"
+  homeInfoParams.Content = ""
   dateFormat = "2006-01-02"
-
-  # 极简模式 - 只保留核心
   ShowReadingTime = false
   ShowShareButtons = false
   ShowPostNavLinks = true
@@ -39,43 +28,50 @@ paginate = 30
   disableSpecial1stPost = true
   disableScrollToTop = false
   comments = false
-  hidemeta = true
+  hidemeta = false
   hideSummary = true
   showtoc = true
   tocopen = false
 
-  cover:
+  [params.socialIcons]
+    0 = { name = "github", url = "https://github.com/YS-yiqu" }
+
+  [params.cover]
     hiddenInList = true
     hiddenInSingle = true
 
-  label:
+  [params.label]
     text = "WenYichao's Blog"
     icon = "/img/favicon.svg"
     iconHeight = 28
 
-  assets:
+  [params.assets]
     favicon = "/img/favicon.svg"
     apple_touch_icon = "/img/favicon.svg"
     safari_pinned_tab = "/img/favicon.svg"
 
-  footer:
+  [params.footer]
     hideCopyright = false
     hideCredits = true
 
-menu:
-  main:
-    - identifier: archives
-      name: 归档
-      url: /archives/
-      weight: 10
-    - identifier: tags
-      name: 标签
-      url: /tags/
-      weight: 20
-    - identifier: search
-      name: 搜索
-      url: /search/
-      weight: 30
+[menu]
+  [[menu.main]]
+    identifier = "archives"
+    name = "归档"
+    url = "/archives/"
+    weight = 10
+
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 20
+
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 30
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
@@ -85,6 +81,7 @@ menu:
     lineNos = true
     lineNumbersInTable = true
     noClasses = false
+
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true

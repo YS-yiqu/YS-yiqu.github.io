@@ -1,83 +1,46 @@
 /* 
  * jiajunhuang.com 风格覆盖
- * 极简、紧凑、文字优先
  */
 
-/* 主页文章列表 - 去掉卡片背景和内边距 */
+/* 主页列表 - 紧凑无边框 */
 .post-entry {
     background: none !important;
     border: none !important;
-    padding: 4px 0 !important;
+    padding: 2px 0 !important;
     margin: 0 !important;
-    border-radius: 0 !important;
 }
 
-/* 文章标题行 - 日期+标题同行显示 */
-.post-entry .entry-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 0 !important;
-}
-
-/* 日期 - YYYY-MM-DD 格式，灰色等宽 */
-.post-entry .entry-header .entry-header-hgroup .entry-date {
-    font-size: 14px;
-    color: #666;
-    font-family: 'Consolas', 'Courier New', monospace;
-    white-space: nowrap;
-    min-width: 85px;
-    display: inline;
-}
-
-/* 标题 - 正常大小，hover 变色 */
-.post-entry .entry-header .entry-header-hgroup .entry-title {
-    font-size: 16px !important;
-    font-weight: 400 !important;
+/* 日期 - 灰色等宽，在标题前 */
+.post-entry .entry-header .entry-title {
     display: inline !important;
-    margin: 0 !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
 }
 
-.post-entry .entry-header .entry-header-hgroup .entry-title a {
+.post-entry .entry-header .entry-title a {
     color: #333 !important;
     text-decoration: none !important;
 }
 
-.post-entry .entry-header .entry-header-hgroup .entry-title a:hover {
+.post-entry .entry-header .entry-title a:hover {
     color: #2d8cf0 !important;
 }
 
-/* 隐藏封面图 */
-.post-entry .entry-cover {
-    display: none !important;
-}
-
-/* 隐藏摘要 */
-.post-entry .entry-content {
-    display: none !important;
-}
-
-/* 隐藏底部标签/元信息 */
+/* 隐藏封面、摘要、页脚 */
+.post-entry .entry-cover,
+.post-entry .entry-content,
 .post-entry .entry-footer {
     display: none !important;
 }
 
-/* 隐藏页面头部的面包屑等元信息 */
-.post-single .post-header .post-description {
-    display: none !important;
-}
-
-/* 主内容区更窄，阅读舒适 */
-.main {
+/* 主内容区 */
+.main,
+.nav,
+.footer {
     max-width: 720px !important;
 }
 
-/* 导航栏简约化 */
-.nav {
-    max-width: 720px !important;
-    padding: 12px 0 !important;
-}
-
+/* 导航简约 */
 .nav .logo a {
     font-size: 18px !important;
     font-weight: 500 !important;
@@ -89,89 +52,46 @@
     color: #666 !important;
 }
 
-.nav .menu a:hover {
+.nav .menu a:hover,
+.nav .menu a.active {
     color: #2d8cf0 !important;
 }
 
-/* 页脚简约化 */
-.footer {
-    max-width: 720px !important;
-    padding: 20px 0 !important;
+/* 首页头部 */
+.home-info {
+    margin: 0 0 16px 0 !important;
+    padding: 0 !important;
 }
 
+.home-info h1 {
+    font-size: 20px !important;
+    font-weight: 500 !important;
+}
+
+/* 页脚 */
 .footer span {
     font-size: 13px !important;
     color: #999 !important;
 }
 
-/* 去掉分页的装饰 */
-.pagination {
-    margin: 20px 0 !important;
-}
-
-.pagination .page-item .page-link {
-    border: none !important;
-    background: none !important;
-    color: #2d8cf0 !important;
-}
-
-/* 首页大标题区 */
-.home-info {
-    margin: 0 0 24px 0 !important;
-    padding: 0 !important;
-}
-
-.home-info h1 {
+/* 文章内部 */
+.post-title {
     font-size: 24px !important;
     font-weight: 500 !important;
-    margin-bottom: 8px !important;
 }
 
-.home-info p {
-    font-size: 14px !important;
-    color: #666 !important;
-    line-height: 1.6 !important;
-}
-
-/* 归档页面 - 也使用紧凑风格 */
-.archives-group .archive-year {
-    font-size: 18px !important;
-    font-weight: 500 !important;
-    margin: 16px 0 8px !important;
-}
-
-.archives-group .archive-month {
-    font-weight: 400 !important;
-    color: #666 !important;
-}
-
-/* 文章页 - 标题 */
-.post-title {
-    font-size: 26px !important;
-    font-weight: 500 !important;
-    margin-bottom: 8px !important;
-}
-
-/* 文章元信息行 */
 .post-meta {
     font-size: 13px !important;
     color: #999 !important;
 }
 
-/* 文章正文 */
 .post-content {
     font-size: 15px !important;
     line-height: 1.8 !important;
     color: #333 !important;
 }
 
-/* 代码块 */
-.post-content pre {
-    border-radius: 4px !important;
-    font-size: 13px !important;
-}
-
-/* 隐藏不需要的元素 */
-.notice, .post-edit, .share-buttons {
-    display: none !important;
+/* 分页 */
+.pagination {
+    margin: 20px 0 !important;
 }
