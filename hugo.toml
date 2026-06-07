@@ -1,0 +1,109 @@
+baseURL = "https://ys-yiqu.github.io/"
+title = "WenYichao's Blog"
+theme = "PaperMod"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+hasCJKLanguage = true
+enableEmoji = true
+enableRobotsTXT = true
+
+paginate = 10
+
+[params]
+  # 主题配置
+  env = "production"
+  description = "记录成长和学习记录，是一个展示和分享的地方"
+  author = "文羿超"
+  keywords = ["Blog", "Portfolio", "技术博客"]
+  images = ["img/avatar.png"]
+
+  # 主页
+  homeInfoParams = {
+    Title = "你好，我是文羿超 👋",
+    Content = "这里是我的个人博客，记录技术学习、踩坑经历和成长心得。\n\n欢迎一起交流！"
+  }
+
+  # 社交链接
+  socialIcons = [
+    { name = "github", url = "https://github.com/YS-yiqu" }
+  ]
+
+  # 文章元信息
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  disableScrollToTop = false
+  comments = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+  tocopen = false
+
+  # 封面
+  cover:
+    hiddenInList = false
+    hiddenInSingle = true
+
+  # 编辑链接
+  editPost:
+    URL = "https://github.com/YS-yiqu/YS-yiqu.github.io/tree/main/content/posts"
+    Text = "建议修改" # edit text
+    appendFilePath = true
+
+  # 标签页配置
+  label:
+    text = "WenYichao's Blog"
+    icon = "/img/favicon.svg"
+    iconHeight = 35
+
+  # 分析
+  # analytics:
+  #   google:
+  #     SiteVerificationTag = ""
+
+  # 资产
+  assets:
+    favicon = "/img/favicon.svg"
+    apple_touch_icon = "/img/favicon.svg"
+    safari_pinned_tab = "/img/favicon.svg"
+
+  # 页脚
+  footer:
+    hideCopyright = false
+    hideCredits = false
+
+# 菜单
+menu:
+  main:
+    - identifier: archives
+      name: 归档
+      url: /archives/
+      weight: 10
+    - identifier: tags
+      name: 标签
+      url: /tags/
+      weight: 20
+    - identifier: search
+      name: 搜索
+      url: /search/
+      weight: 30
+
+# 搜索功能
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# Markdown 渲染
+[markup]
+  [markup.highlight]
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
