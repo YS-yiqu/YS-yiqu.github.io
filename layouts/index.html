@@ -55,6 +55,45 @@
       <div class="sidebar-bio">🌱 从零开始的成长记录</div>
       <div class="sidebar-desc">{{ .Site.Params.description | default "" }}</div>
       <a class="sidebar-btn" href="https://github.com/YS-yiqu" target="_blank" rel="noopener">GitHub</a>
+
+      {{- $today := now.Format "2006-01-02" }}
+      {{- $yesterday := (now.AddDate 0 0 -1).Format "2006-01-02" }}
+      {{- $todayPosts := slice }}
+      {{- $yestPosts := slice }}
+      {{- range .Site.RegularPages }}
+        {{- $d := .Date.Format "2006-01-02" }}
+        {{- if eq $d $today }}
+          {{- $todayPosts = $todayPosts | append . }}
+        {{- else if eq $d $yesterday }}
+          {{- $yestPosts = $yestPosts | append . }}
+        {{- end }}
+      {{- end }}
+      {{- $todayCount := len $todayPosts }}
+      {{- $yestCount := len $yestPosts }}
+      {{- $totalCount := len .Site.RegularPages }}
+      <div class="sidebar-stats">
+        <div class="stat-today">
+          <span class="stat-emoji">🔥</span>
+          <span class="stat-num">{{ $todayCount }}</span>
+          <span class="stat-label">今日更新</span>
+        </div>
+        <div class="stat-yesterday">
+          <span class="stat-emoji">📅</span>
+          <span class="stat-num">{{ $yestCount }}</span>
+          <span class="stat-label">昨日更新</span>
+        </div>
+        <div class="stat-total">
+          <span class="stat-num">{{ $totalCount }}</span>
+          <span class="stat-label">累计文章</span>
+        </div>
+        {{- if gt $todayCount 2 }}
+        <div class="stat-cheer">今天效率超高！💪</div>
+        {{- else if gt $todayCount 0 }}
+        <div class="stat-cheer">每天进步一点点 🌱</div>
+        {{- else }}
+        <div class="stat-cheer">今天还没写？来一篇吧 ✍️</div>
+        {{- end }}
+      </div>
     </div>
   </aside>
 </div>
