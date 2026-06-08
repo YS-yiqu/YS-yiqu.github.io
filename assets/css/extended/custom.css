@@ -213,10 +213,18 @@
     }
     .post-single .toc summary::-webkit-details-marker { display: none; }
     .post-single .toc nav ul { list-style: none; padding: 0; margin: 0; }
-    .post-single .toc nav li { padding: 3px 0; }
+    .post-single .toc nav li {
+        padding: 3px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .post-single .toc nav a {
         color: #666 !important; text-decoration: none !important;
         font-size: 12px !important; line-height: 1.6 !important;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .post-single .toc nav li.active > a,
     .post-single .toc nav a:hover { color: #2d8cf0 !important; }
