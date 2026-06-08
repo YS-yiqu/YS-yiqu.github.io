@@ -3,7 +3,7 @@ title: "npx 不重新下载了！被误解八年的真相"
 date: 2026-06-08T16:00:00+08:00
 lastmod: 2026-06-08T16:00:00+08:00
 description: 'npx 每次都要重新下载？这个"常识"早在 2020 年就变了。npm@7 悄悄加了缓存机制，但没人告诉你。'
-tags: ["工具技巧", "npm", "npx"]
+tags: ["工具技巧", "npm", "npx", "经验教训"]
 categories: ["技术"]
 draft: false
 ---

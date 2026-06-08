@@ -3,7 +3,7 @@ title: "在手机上装 AI 编程工具，我白折腾了一下午"
 date: 2026-05-24T14:00:00+08:00
 lastmod: 2026-06-08T18:01:00+08:00
 description: '想在 Termux 里装个 AI 编程助手，结果掉进编译地狱。其实有 WASM 方案，2 分钟就搞定。'
-tags: ["AI", "工具技巧", "故障诊断", "经验教训"]
+tags: ["AI", "Termux", "工具技巧", "故障诊断"]
 categories: ["技术"]
 draft: false
 ---

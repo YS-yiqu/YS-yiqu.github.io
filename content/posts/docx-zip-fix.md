@@ -3,7 +3,7 @@ title: "你的 .docx 打不开？多半是打包姿势不对"
 date: 2026-06-07T09:00:00+08:00
 lastmod: 2026-06-07T09:00:00+08:00
 description: "一个 3MB 的 docx 文件打不开？其实不是文件坏了，是打包姿势不对。深入 OPC 标准，5 分钟修好。"
-tags: ["docx", "Word", "ZIP", "OPC"]
+tags: ["docx", "Word", "ZIP", "OPC", "经验教训"]
 categories: ["技术"]
 draft: false
 ---
