@@ -1,41 +1,36 @@
 {{- define "main" }}
 
-{{- if .Site.Params.profileMode.enabled }}
-<div class="profile">
-  <div class="profile_inner">
-    {{- with .Site.Params.profileMode.imageUrl }}
-    <img src="{{ . | absURL }}" alt="{{ $.Site.Params.profileMode.imageTitle | default "avatar" }}" />
-    {{- end }}
-    <h1 class="profile-h1">{{ .Site.Params.profileMode.title | default .Site.Title }}</h1>
-    {{- with .Site.Params.profileMode.subtitle }}
-    <span class="profile-subtitle">{{ . }}</span>
-    {{- end }}
-    {{- with .Site.Params.profileMode.buttons }}
-    <div class="profile-buttons">
-      {{- range . }}
-      <a href="{{ trim .url " " }}" rel="noopener" target="_blank">{{ .name }}</a>
+<div class="layout-with-sidebar">
+  <div class="posts-main">
+    {{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{- $pages = $pages.GroupByDate "2006" }}
+
+    {{- range $pages }}
+    <div class="archive-year">
+      <h2>{{ .Key }}</h2>
+      {{- range .Pages.GroupByDate "January" }}
+      {{- range .Pages }}
+      <div class="archive-entry">
+        <time>{{ .Date.Format "01-02" }}</time>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </div>
+      {{- end }}
       {{- end }}
     </div>
     {{- end }}
   </div>
-</div>
-{{- end }}
 
-{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-{{- $pages = $pages.GroupByDate "2006" }}
-
-{{- range $pages }}
-<div class="archive-year">
-  <h2>{{ .Key }}</h2>
-  {{- range .Pages.GroupByDate "January" }}
-  {{- range .Pages }}
-  <div class="archive-entry">
-    <time>{{ .Date.Format "01-02" }}</time>
-    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-  </div>
-  {{- end }}
-  {{- end }}
+  <aside class="home-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-avatar">
+        <img src="{{ "/img/favicon.svg" | absURL }}" alt="avatar" />
+      </div>
+      <div class="sidebar-name">WenYichao's Blog</div>
+      <div class="sidebar-bio">🌱 从零开始的成长记录</div>
+      <div class="sidebar-desc">{{ .Site.Params.description | default "" }}</div>
+      <a class="sidebar-btn" href="https://github.com/YS-yiqu" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </aside>
 </div>
-{{- end }}
 
 {{- end }}

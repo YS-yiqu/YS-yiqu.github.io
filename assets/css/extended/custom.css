@@ -116,6 +116,80 @@
 .archive-entry a:hover { color: #2d8cf0 !important; }
 
 /* 侧边栏作者介绍 */
+/* 首页双栏布局 */
+.layout-with-sidebar {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.posts-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.home-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+}
+
+.sidebar-card {
+    text-align: center;
+    padding: 16px;
+}
+
+.sidebar-avatar img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    margin-bottom: 8px;
+}
+
+.sidebar-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.sidebar-bio {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.sidebar-desc {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+.sidebar-btn {
+    display: inline-block;
+    padding: 4px 20px;
+    font-size: 13px;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.sidebar-btn:hover {
+    color: #2d8cf0;
+    border-color: #2d8cf0;
+}
+
+/* 小屏变回单栏 */
+@media (max-width: 860px) {
+    .layout-with-sidebar { flex-direction: column; }
+    .home-sidebar { width: 100%; position: static; }
+}
+
 .author-info__description {
     font-size: 13px !important;
     line-height: 1.8 !important;
