@@ -17,7 +17,7 @@
           {{- $name := . }}
           {{- $articles := where $seriesPages "Params.series" "intersect" (slice $name) }}
           <div class="series-group">
-            <div class="series-name">{{ $name }}</div>
+            <a class="series-name" href="/posts/ont-series-index/">{{ $name }}</a>
             {{- range sort $articles "Params.series_weight" }}
             <a class="series-item" href="{{ .RelPermalink }}" title="{{ .Title }}">
               <span class="series-num">{{ printf "%02d" .Params.series_weight }}</span>

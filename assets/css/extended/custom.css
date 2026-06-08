@@ -163,13 +163,16 @@
 }
 
 .series-name {
+    display: block;
     font-size: 14px;
     font-weight: 600;
     color: #333;
     margin-bottom: 6px;
     padding-bottom: 4px;
     border-bottom: 1px solid #eee;
+    text-decoration: none;
 }
+.series-name:hover { color: #2d8cf0; }
 
 .series-item {
     display: flex;
