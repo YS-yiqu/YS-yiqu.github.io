@@ -3,7 +3,7 @@ title: "LaTeX 从安装到真香：一个初学者的踩坑全记录"
 date: 2024-09-03T16:00:00+08:00
 lastmod: 2024-09-03T16:00:00+08:00
 description: "Tex Live 安装要半小时？VSCode 配 LaTeX 配置到崩溃？从零开始折腾 LaTeX 的全过程踩坑记录。"
-tags: ["LaTeX", "排版", "工具配置"]
+tags: ["LaTeX", "工具技巧"]
 categories: ["技术"]
 draft: false
 ---

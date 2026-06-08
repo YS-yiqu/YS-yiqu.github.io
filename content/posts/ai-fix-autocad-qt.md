@@ -3,7 +3,7 @@ title: "我给AI开了动手权限后，3分钟修好了折磨我一小时的Aut
 date: 2026-06-06T10:30:00+08:00
 lastmod: 2026-06-08T16:00:00+08:00
 description: "AutoCAD 启动报 No Qt platform plugin？传统解法折腾半天，有动手能力的 AI 3 分钟定位根因、直接执行修复。"
-tags: ["AutoCAD", "Qt", "AI", "故障排查"]
+tags: ["AutoCAD", "Qt", "AI", "故障诊断"]
 categories: ["技术"]
 draft: false
 ---
