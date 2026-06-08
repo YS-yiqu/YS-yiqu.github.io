@@ -12,17 +12,11 @@ paginate = 30
 [params]
   env = "production"
   description = "🌱 这里记录了一个普通人的学习和踩坑历程。从零开始，慢慢积累，每篇文章都是成长路上的一块砖。不追求完美，只追求进步。希望我的记录能帮到你，哪怕只有一点点。"
-  author = "文羿超"
+  author = "WenYichao's Blog"
   keywords = ["Blog", "技术博客"]
 
   # 首页 profile 模式
-  profileMode.enabled = true
-  profileMode.title = "WenYichao's Blog"
-  profileMode.subtitle = "🌱 从零开始的成长记录"
-  profileMode.imageUrl = "/img/favicon.svg"
-  profileMode.imageTitle = "WY"
-  profileMode.buttons.0.name = "GitHub"
-  profileMode.buttons.0.url = "https://github.com/YS-yiqu"
+  profileMode.enabled = false
 
   dateFormat = "2006-01-02"
 
