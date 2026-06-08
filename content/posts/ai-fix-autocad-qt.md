@@ -1,5 +1,5 @@
 ---
-title: "我给AI开了动手权限后，3分钟修好了折磨我一小时的AutoCAD报错"
+title: "我给AI放开权限，3分钟修好了AutoCAD报错"
 date: 2026-06-06
 lastmod: 2026-06-08
 description: "AutoCAD 启动报 No Qt platform plugin？传统解法折腾半天，有动手能力的 AI 3 分钟定位根因、直接执行修复。"
