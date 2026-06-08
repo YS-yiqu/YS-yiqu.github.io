@@ -196,7 +196,7 @@
         position: fixed !important;
         left: max(20px, calc((100vw - 850px) / 2 - 260px)) !important;
         top: 80px !important;
-        width: 240px !important;
+        width: 260px !important;
         max-height: calc(100vh - 120px) !important;
         overflow-y: auto !important;
         font-size: 13px !important;
@@ -229,7 +229,7 @@
         position: fixed !important;
         left: max(20px, calc((100vw - 850px) / 2 - 260px)) !important;
         bottom: 40px !important;
-        width: 240px !important;
+        width: 260px !important;
         border-top: 1px solid #eee !important;
         padding-top: 12px !important;
         display: flex !important;
