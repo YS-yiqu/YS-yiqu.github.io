@@ -25,11 +25,11 @@ draft: false
 
 | 序号 | 标题 | 内容 | 预计时间 |
 |------|------|------|---------|
-| 01 | 黑进自家光猫：宽带密码提取记 | 忘记账号密码？用配置文件下载接口直接拿 | 5 分钟 |
-| 02 | 桥接踩坑记：6 种方案全军覆没 | 试了 N 种组合，华硕路由器始终 Timeout | 6 分钟 |
-| 03 | 没有公网 IPv4？用 IPv6 照样开端口 | CGN 内网不可怕：每台设备都有公网 IPv6 | 5 分钟 |
-| 04 | 告别付费远程桌面：Tailscale+RustDesk | 免费、直连、不弹窗的远程办公方案 | 5 分钟 |
-| 05 | 把 NAS 变成 Z 盘：Tailscale 文件共享 | 资源管理器直接拖文件，像在用本地硬盘 | 4 分钟 |
+| 01 | [黑进自家光猫：宽带密码提取记](/posts/ont-password-extract/) | 忘记账号密码？用配置文件下载接口直接拿 | 5 分钟 |
+| 02 | [桥接踩坑记：6 种方案全军覆没](/posts/ont-bridge-fail/) | 试了 N 种组合，华硕路由器始终 Timeout | 6 分钟 |
+| 03 | [没有公网 IPv4？用 IPv6 照样开端口](/posts/ont-ipv6/) | CGN 内网不可怕：每台设备都有公网 IPv6 | 5 分钟 |
+| 04 | [告别付费远程桌面：Tailscale+RustDesk](/posts/ont-remote-desktop/) | 免费、直连、不弹窗的远程办公方案 | 5 分钟 |
+| 05 | [把 NAS 变成 Z 盘：Tailscale 文件共享](/posts/ont-nas-file-share/) | 资源管理器直接拖文件，像在用本地硬盘 | 4 分钟 |
 
 ---
 
@@ -54,8 +54,4 @@ draft: false
 
 ## 系列文章
 
-- [01 - 黑进自家光猫：宽带密码提取记](/posts/ont-password-extract/)
-- [02 - 桥接踩坑记：6 种方案全军覆没](/posts/ont-bridge-fail/)
-- [03 - 没有公网 IPv4？用 IPv6 照样开端口](/posts/ont-ipv6/)
-- [04 - 告别付费远程桌面：Tailscale+RustDesk](/posts/ont-remote-desktop/)
-- [05 - 把 NAS 变成 Z 盘：Tailscale 文件共享](/posts/ont-nas-file-share/)
+
