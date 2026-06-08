@@ -268,12 +268,6 @@
     .left-sidebar { position: static; }
 }
 
-/* 文章页隐藏右侧栏，给 Hypothes.is 批注侧边栏腾空间 */
-.post-single #aside-content,
-.post-single .aside-content {
-    display: none !important;
-}
-
 .author-info__description {
     font-size: 13px !important;
     line-height: 1.8 !important;
@@ -286,10 +280,11 @@
 @media (min-width: 1100px) {
     .post-single .toc {
         position: fixed !important;
-        left: max(20px, calc((100vw - 850px) / 2 - 260px)) !important;
+        left: max(20px, calc((100vw - 850px) / 2 - 280px)) !important;
         top: 80px !important;
-        width: 260px !important;
+        width: 250px !important;
         max-height: calc(100vh - 120px) !important;
+        padding-right: 20px !important;
         overflow-y: auto !important;
         font-size: 13px !important;
         background: none !important;
@@ -319,7 +314,7 @@
 @media (min-width: 1100px) {
     .post-single .post-tags {
         position: fixed !important;
-        left: max(20px, calc((100vw - 850px) / 2 - 260px)) !important;
+        left: max(20px, calc((100vw - 850px) / 2 - 280px)) !important;
         bottom: 40px !important;
         width: 260px !important;
         border-top: 1px solid #eee !important;
