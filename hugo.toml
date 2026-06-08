@@ -40,7 +40,7 @@ paginate = 30
   hidemeta = false
   hideSummary = true
   showtoc = true
-  tocopen = false
+  tocopen = true
 
   [params.socialIcons]
     0 = { name = "github", url = "https://github.com/YS-yiqu" }
