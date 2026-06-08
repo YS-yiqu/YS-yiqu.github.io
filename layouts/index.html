@@ -1,6 +1,30 @@
 {{- define "main" }}
 
 <div class="layout-with-sidebar">
+  <aside class="left-sidebar">
+    <div class="series-list">
+      <div class="series-title">📚 系列文章</div>
+      {{- $seriesPages := where .Site.RegularPages "Params.categories" "intersect" (slice "系列") }}
+      {{- $seriesNames := slice }}
+      {{- range $seriesPages }}
+        {{- if .Params.series }}
+          {{- $seriesNames = $seriesNames | append .Params.series }}
+        {{- end }}
+      {{- end }}
+      {{- $seriesNames = $seriesNames | uniq }}
+      {{- range $seriesNames }}
+        {{- $count := where $seriesPages "Params.series" "intersect" (slice .) | len }}
+        {{- $indexPage := where $seriesPages "Title" "like" (printf "%s*" .) | first 1 }}
+        <a class="series-item" href="{{ if $indexPage }}{{ (index $indexPage 0).RelPermalink }}{{ else }}#{{ end }}">
+          {{ . }} <span class="series-count">{{ $count }}</span>
+        </a>
+      {{- end }}
+      {{- if not $seriesNames }}
+        <div class="series-item series-empty">光猫折腾记 <span class="series-count">6</span></div>
+      {{- end }}
+    </div>
+  </aside>
+
   <div class="posts-main">
     {{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
     {{- $pages = $pages.GroupByDate "2006" }}
@@ -23,7 +47,7 @@
   <aside class="home-sidebar">
     <div class="sidebar-card">
       <div class="sidebar-name">WenYichao's Blog</div>
-      <div class="sidebar-bio">从零开始的成长记录</div>
+      <div class="sidebar-bio">🌱 从零开始的成长记录</div>
       <div class="sidebar-desc">{{ .Site.Params.description | default "" }}</div>
       <a class="sidebar-btn" href="https://github.com/YS-yiqu" target="_blank" rel="noopener">GitHub</a>
     </div>
