@@ -1,7 +1,7 @@
 ---
 title: "从零搭建个人博客的完整踩坑记录"
-date: 2024-09-01
-lastmod: 2024-09-01
+date: 2024-09-01T15:00:00+08:00
+lastmod: 2024-09-01T15:00:00+08:00
 description: "用 Hexo + GitHub Pages 搭建个人博客的全过程，一个新手踩过的每一个坑和怎么爬出来的。"
 tags: ["网站搭建", "博客", "Hexo"]
 categories: ["技术"]

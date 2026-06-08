@@ -1,7 +1,7 @@
 ---
 title: "LaTeX 从安装到真香：一个初学者的踩坑全记录"
-date: 2024-09-03
-lastmod: 2024-09-03
+date: 2024-09-03T16:00:00+08:00
+lastmod: 2024-09-03T16:00:00+08:00
 description: "Tex Live 安装要半小时？VSCode 配 LaTeX 配置到崩溃？从零开始折腾 LaTeX 的全过程踩坑记录。"
 tags: ["LaTeX", "排版", "工具配置"]
 categories: ["技术"]
@@ -54,13 +54,13 @@ latex -v
 
 ## 踩坑记录
 
-### 坑1：LaTeX Workshop 和 vscode-pdf 冲突
+### 坑1：LaTeX Workshop 插件冲突
 
 **现象**：安装后提示 `LaTeX Workshop is incompatible with "vscode-pdf"`
 
 **解决**：禁用或卸载 `vscode-pdf` 插件，两个功能冲突。
 
-### 坑2：Recipe terminated with fatal error: spawn latexmk ENOENT
+### 坑2：编译报错找不到 latexmk
 
 **现象**：点编译就报错，说找不到 latexmk。
 

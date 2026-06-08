@@ -1,7 +1,7 @@
 ---
 title: "你的 .docx 打不开？多半是打包姿势不对"
-date: 2026-06-07
-lastmod: 2026-06-07
+date: 2026-06-07T09:00:00+08:00
+lastmod: 2026-06-07T09:00:00+08:00
 description: "一个 3MB 的 docx 文件打不开？其实不是文件坏了，是打包姿势不对。深入 OPC 标准，5 分钟修好。"
 tags: ["docx", "Word", "ZIP", "OPC"]
 categories: ["技术"]
@@ -111,13 +111,13 @@ draft: false
 
 ## 经验教训
 
-### 1. 不是所有 .docx 都能用 Word 直接生成
+### 1. 不是所有 .docx 都能用 Word 生成
 
 用脚本自动生成 .docx 时（比如 Python 的 `zipfile` 手动打包），最容易踩的坑就是——**路径层级不对**。
 
 核心原则：**打包时入口文件必须在根目录，不能有文件夹前缀。**
 
-### 2. 判断一个 .docx 是否健康的"土办法"
+### 2. 判断 .docx 健康状态的土办法
 
 ```python
 import zipfile
