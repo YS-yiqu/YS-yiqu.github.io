@@ -1,45 +1,56 @@
 ---
-title: "Hello World"
+title: "博客第一篇文章：为什么要开始写博客"
 date: 2024-08-31
 lastmod: 2024-08-31
-description: "Hexo 的第一篇默认文章"
-tags: []
-categories: []
+description: "这是我的第一篇博客文章。聊聊为什么决定开始写博客，以及这个博客打算记录些什么。"
+tags: ["博客"]
+categories: ["生活"]
 draft: false
 ---
 
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
+欢迎来到我的博客 👋
 
-## Quick Start
+这是 WenYichao's Blog 的第一篇文章。在这里，我想记录下两件事：**为什么开始写博客**，以及**这个博客打算写些什么**。
 
-### Create a new post
+---
 
-```bash
-$ hexo new "My New Post"
-```
+## 为什么要写博客？
 
-More info: [Writing](https://hexo.io/docs/writing.html)
+### 1. 记录学习，方便复盘
 
-### Run server
+学过的知识如果不整理，很快就会忘掉。写下来的过程本身就是一次深度复习——你得把脑子里的东西组织成别人能看懂的句子，这个过程逼着你理清思路。
 
-```bash
-$ hexo server
-```
+以后遇到同样的问题，翻翻自己的文章就行，不用重新踩坑。
 
-More info: [Server](https://hexo.io/docs/server.html)
+### 2. 一份"电子简历"
 
-### Generate static files
+文字比简历更真实。面试官只能看一页纸，但博客能展示你持续学习的过程、解决问题的思路、甚至你的写作表达能力。
 
-```bash
-$ hexo generate
-```
+这个博客就是我的**电子使用说明书**——记录了我摸过什么、踩过什么坑、最后怎么爬出来的。
 
-More info: [Generating](https://hexo.io/docs/generating.html)
+### 3. 分享也是一种学习
 
-### Deploy to remote sites
+把经验分享出去，可能会帮到某个正在踩同样坑的人。而且分享的过程会倒逼自己把东西弄清楚——不然怎么给别人讲明白呢？
 
-```bash
-$ hexo deploy
-```
+---
 
-More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
+## 这个博客会写什么？
+
+目前计划写以下几个方向：
+
+| 方向 | 内容 |
+|------|------|
+| 技术笔记 | 编程、工具配置、软件使用踩坑 |
+| 学习方法 | 如何高效学习新东西 |
+| 项目记录 | 做过的项目、遇到的问题 |
+| 杂谈 | 读书笔记、效率工具推荐 |
+
+不追求日更，也不追求完美——**有收获就写，写下来就是进步**。
+
+---
+
+## 开始
+
+这篇博客从 2024 年 8 月 31 日开始。
+
+希望几年后回头看的时候，能看到一段扎实的成长轨迹 🌱
