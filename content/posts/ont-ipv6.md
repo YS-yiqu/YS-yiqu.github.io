@@ -5,6 +5,8 @@ lastmod: 2026-06-08T13:03:00+08:00
 description: "桥接搞不定？退而求其次，光猫继续拨号，用公网 IPv6 实现端口开放。每台设备都有全球唯一地址。"
 tags: ["光猫", "IPv6", "端口转发", "CGN"]
 categories: ["系列"]
+series: ["光猫折腾记"]
+series_weight: 3
 draft: false
 ---
 

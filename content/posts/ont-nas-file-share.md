@@ -5,6 +5,8 @@ lastmod: 2026-06-08T13:05:00+08:00
 description: "装好 Tailscale 后，用 100.x.x.x 地址在资源管理器里直接打开 NAS 文件夹。映射成 Z 盘，就像在本地一样。"
 tags: ["光猫", "文件共享", "SMB", "Tailscale", "NAS"]
 categories: ["系列"]
+series: ["光猫折腾记"]
+series_weight: 5
 draft: false
 ---
 

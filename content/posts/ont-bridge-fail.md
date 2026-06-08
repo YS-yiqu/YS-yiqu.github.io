@@ -5,6 +5,8 @@ lastmod: 2026-06-08T13:02:00+08:00
 description: "拿到宽带密码后开始改桥接，结果 6 个小时 6 种方案全部失败。根因不是配置问题，是光猫固件的 VLAN 透传有 bug。"
 tags: ["光猫", "桥接", "PPPoE", "VLAN"]
 categories: ["系列"]
+series: ["光猫折腾记"]
+series_weight: 2
 draft: false
 ---
 

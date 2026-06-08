@@ -5,22 +5,27 @@
     <div class="series-list">
       <div class="series-title">📚 系列文章</div>
       {{- $seriesPages := where .Site.RegularPages "Params.categories" "intersect" (slice "系列") }}
-      {{- $seriesNames := slice }}
+      {{- $allSeries := slice }}
       {{- range $seriesPages }}
-        {{- if .Params.series }}
-          {{- $seriesNames = $seriesNames | append .Params.series }}
+        {{- with .Params.series }}
+          {{- $allSeries = $allSeries | append . }}
         {{- end }}
       {{- end }}
-      {{- $seriesNames = $seriesNames | uniq }}
-      {{- range $seriesNames }}
-        {{- $count := where $seriesPages "Params.series" "intersect" (slice .) | len }}
-        {{- $indexPage := where $seriesPages "Title" "like" (printf "%s*" .) | first 1 }}
-        <a class="series-item" href="{{ if $indexPage }}{{ (index $indexPage 0).RelPermalink }}{{ else }}#{{ end }}">
-          {{ . }} <span class="series-count">{{ $count }}</span>
-        </a>
-      {{- end }}
-      {{- if not $seriesNames }}
-        <div class="series-item series-empty">光猫折腾记 <span class="series-count">6</span></div>
+      {{- $allSeries = $allSeries | uniq }}
+      {{- if $allSeries }}
+        {{- range $allSeries }}
+          {{- $name := . }}
+          {{- $articles := where $seriesPages "Params.series" "intersect" (slice $name) }}
+          <div class="series-group">
+            <div class="series-name">{{ $name }}</div>
+            {{- range sort $articles "Params.series_weight" }}
+            <a class="series-item" href="{{ .RelPermalink }}" title="{{ .Title }}">
+              <span class="series-num">{{ printf "%02d" .Params.series_weight }}</span>
+              <span class="series-label">{{ $name }} {{ .Params.series_weight }}</span>
+            </a>
+            {{- end }}
+          </div>
+        {{- end }}
       {{- end }}
     </div>
   </aside>

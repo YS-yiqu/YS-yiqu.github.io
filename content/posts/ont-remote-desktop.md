@@ -5,6 +5,8 @@ lastmod: 2026-06-08T13:04:00+08:00
 description: "TeamViewer 弹窗、AnyDesk 延迟、向日葵限速？Tailscale+RustDesk 直连方案，免费不限速不弹窗。"
 tags: ["光猫", "远程桌面", "Tailscale", "RustDesk", "P2P"]
 categories: ["系列"]
+series: ["光猫折腾记"]
+series_weight: 4
 draft: false
 ---
 
