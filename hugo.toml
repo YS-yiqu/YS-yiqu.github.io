@@ -7,7 +7,7 @@ enableEmoji = true
 enableRobotsTXT = true
 theme = "PaperMod"
 
-paginate = 10
+paginate = 30
 
 [params]
   env = "production"
@@ -15,13 +15,17 @@ paginate = 10
   author = "文羿超"
   keywords = ["Blog", "技术博客"]
 
-  # 主页标题
-  homeInfoParams.Title = "WenYichao's Blog"
-  homeInfoParams.Content = "记录成长和学习记录"
+  # 首页 profile 模式
+  profileMode.enabled = true
+  profileMode.title = "WenYichao's Blog"
+  profileMode.subtitle = "记录成长和学习记录 — 一份电子使用说明书和简历"
+  profileMode.imageUrl = "/img/favicon.svg"
+  profileMode.imageTitle = "WY"
+  profileMode.buttons.0.name = "GitHub"
+  profileMode.buttons.0.url = "https://github.com/YS-yiqu"
 
   dateFormat = "2006-01-02"
 
-  # jiajunhuang 极简风格
   ShowReadingTime = false
   ShowWordCount = false
   ShowShareButtons = false
@@ -61,22 +65,16 @@ paginate = 10
 
 [menu]
   [[menu.main]]
-    identifier = "archives"
-    name = "归档"
-    url = "/archives/"
-    weight = 10
-
-  [[menu.main]]
     identifier = "tags"
     name = "标签"
     url = "/tags/"
-    weight = 20
+    weight = 10
 
   [[menu.main]]
     identifier = "search"
     name = "搜索"
     url = "/search/"
-    weight = 30
+    weight = 20
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
