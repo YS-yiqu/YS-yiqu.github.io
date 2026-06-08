@@ -67,8 +67,8 @@
     display: none !important;
 }
 
-/* 窄 */
-.main, .nav, .footer { max-width: 720px !important; }
+/* 主内容区宽度 */
+.main, .nav, .footer { max-width: 760px !important; }
 
 .nav { padding: 12px 0 !important; }
 .nav .logo a { font-size: 18px !important; font-weight: 500 !important; color: #333 !important; }
@@ -134,13 +134,13 @@
 /* 首页三栏布局 */
 .layout-with-sidebar {
     display: flex;
-    gap: 32px;
+    gap: 24px;
     align-items: flex-start;
 }
 
 /* 左侧系列栏 */
 .left-sidebar {
-    width: 160px;
+    width: 140px;
     flex-shrink: 0;
     position: sticky;
     top: 80px;
@@ -189,7 +189,7 @@
 }
 
 .home-sidebar {
-    width: 220px;
+    width: 200px;
     flex-shrink: 0;
     position: sticky;
     top: 80px;
