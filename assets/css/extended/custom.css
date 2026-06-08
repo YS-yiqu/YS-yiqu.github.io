@@ -115,6 +115,21 @@
 .archive-entry a { font-size: 15px !important; color: #333 !important; text-decoration: none !important; }
 .archive-entry a:hover { color: #2d8cf0 !important; }
 
+/* 系列导航条 */
+.series-nav {
+    margin: 32px 0 !important;
+    border-top: 1px solid #eee !important;
+    padding-top: 16px !important;
+}
+.series-nav table {
+    width: 100% !important;
+    font-size: 13px !important;
+}
+.series-nav td { padding: 4px 8px !important; }
+.series-nav td:first-child { text-align: left !important; }
+.series-nav td:nth-child(2) { text-align: center !important; }
+.series-nav td:last-child { text-align: right !important; }
+
 /* 侧边栏作者介绍 */
 /* 首页双栏布局 */
 .layout-with-sidebar {
