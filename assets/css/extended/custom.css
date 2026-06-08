@@ -140,14 +140,6 @@
     padding: 16px;
 }
 
-.sidebar-avatar img {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    margin-bottom: 8px;
-}
-
 .sidebar-name {
     font-size: 16px;
     font-weight: 600;
