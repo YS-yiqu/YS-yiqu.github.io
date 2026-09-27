@@ -1,0 +1,18 @@
+{{- /* 标签页动态标题：切走标签时换标题，切回后 2 秒恢复原标题 */ -}}
+<script>
+(function () {
+  var originTitle = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      clearTimeout(titleTime);
+      document.title = "你别走吖 Σ(っ °Д °;)っ";
+    } else {
+      document.title = "(/≧▽≦/)你又回来啦！";
+      titleTime = setTimeout(function () {
+        document.title = originTitle;
+      }, 2000);
+    }
+  });
+})();
+</script>
