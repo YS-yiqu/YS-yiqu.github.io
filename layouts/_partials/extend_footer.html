@@ -16,3 +16,202 @@
   });
 })();
 </script>
+
+{{- /* 背景音乐播放器：APlayer + 自建 Meting API。可拖动、可切歌单、可折叠到侧边。 */ -}}
+<div id="mp-wrap">
+  <div id="mp-bar">
+    <span class="mp-dot" title="按住拖动">⠿</span>
+    <select id="mp-sel" title="切换歌单"></select>
+    <button id="mp-side-btn" title="折叠到侧边">侧</button>
+    <button id="mp-toggle" title="收起 / 展开">▾</button>
+  </div>
+  <div id="mp-body">
+    <div id="blog-music-player"></div>
+  </div>
+</div>
+<div id="mp-tab" title="点开播放器">♪</div>
+<script src="/lib/APlayer.min.js"></script>
+<script>
+(function () {
+  var API = "https://dh2600-7cd9.tailcc5f1e.ts.net/api?server=netease&type=playlist&id=";
+  var LISTS = [
+    { id: "712921826",  name: "喜欢的音乐" },
+    { id: "2694335558", name: "花粥" },
+    { id: "8481898404", name: "emo小曲" },
+    { id: "8482050648", name: "游戏进行曲" },
+    { id: "10064527931", name: "思考·读书" },
+    { id: "9923979604", name: "宁心" },
+    { id: "10085100361", name: "安神" },
+    { id: "7354583744", name: "随心·快乐·哼唱" },
+    { id: "7379089107", name: "成长" },
+    { id: "12278756216", name: "缱绻" },
+    { id: "7681170372", name: "女氓" },
+    { id: "12451708040", name: "后悔" }
+  ];
+
+  var wrap = document.getElementById("mp-wrap");
+  var tab = document.getElementById("mp-tab");
+  if (!wrap || !tab || typeof APlayer === "undefined") return;
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // ---------- 歌单切换 ----------
+  var sel = document.getElementById("mp-sel");
+  LISTS.forEach(function (p) {
+    var o = document.createElement("option");
+    o.value = p.id;
+    o.textContent = p.name;
+    sel.appendChild(o);
+  });
+
+  var ap = new APlayer({
+    container: document.getElementById("blog-music-player"),
+    audio: [],
+    theme: "#4a90d9",
+    loop: "all",
+    order: "random",
+    preload: "none",
+    listFolded: false,
+    listMaxHeight: "160px",
+    volume: 0.7,
+    mutex: true,
+    lrcType: 3
+  });
+
+  function load(id) {
+    fetch(API + id)
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        if (!Array.isArray(list) || !list.length) return;
+        ap.list.clear();
+        ap.list.add(list.map(function (s) {
+          return { name: s.title, artist: s.author, url: s.url, cover: s.pic, lrc: s.lrc };
+        }));
+        lsSet("mp-list", id);
+      })
+      .catch(function () {});
+  }
+
+  var start = lsGet("mp-list");
+  if (!LISTS.some(function (p) { return p.id === start; })) start = LISTS[0].id;
+  sel.value = start;
+  sel.addEventListener("change", function () { load(sel.value); });
+  load(start);
+
+  // ---------- 收起 / 展开 ----------
+  var toggle = document.getElementById("mp-toggle");
+  wrap.classList.add("mp-open");
+  toggle.addEventListener("click", function () {
+    wrap.classList.toggle("mp-open");
+    toggle.textContent = wrap.classList.contains("mp-open") ? "▾" : "▴";
+  });
+
+  // ---------- 拖动位置 ----------
+  var bar = document.getElementById("mp-bar");
+  var dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(v, hi)); }
+
+  function place(l, t) {
+    var w = wrap.offsetWidth, h = wrap.offsetHeight;
+    wrap.style.left = clamp(l, 4, Math.max(4, window.innerWidth - w - 4)) + "px";
+    wrap.style.top = clamp(t, 4, Math.max(4, window.innerHeight - h - 4)) + "px";
+    wrap.style.right = "auto";
+    wrap.style.bottom = "auto";
+  }
+
+  bar.addEventListener("pointerdown", function (e) {
+    var tag = e.target.tagName;
+    if (tag === "SELECT" || tag === "BUTTON") return;
+    if (e.target.className !== "mp-dot" && e.target !== bar) return;
+    var r = wrap.getBoundingClientRect();
+    dragging = true;
+    sx = e.clientX; sy = e.clientY; ox = r.left; oy = r.top;
+    try { bar.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  bar.addEventListener("pointermove", function (e) {
+    if (!dragging) return;
+    place(ox + e.clientX - sx, oy + e.clientY - sy);
+  });
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    lsSet("mp-pos", wrap.style.left + "," + wrap.style.top);
+    try { bar.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
+  bar.addEventListener("pointerup", endDrag);
+  bar.addEventListener("pointercancel", endDrag);
+
+  // ---------- 折叠到侧边 ----------
+  function showTab(side, y) {
+    tab.classList.add("mp-show");
+    tab.classList.toggle("mp-right", side === "right");
+    tab.classList.toggle("mp-left", side === "left");
+    tab.style.top = clamp(y, 4, window.innerHeight - 60) + "px";
+    wrap.classList.add("mp-side");
+  }
+
+  function toSide() {
+    var r = wrap.getBoundingClientRect();
+    var side = (r.left + r.width / 2) < window.innerWidth / 2 ? "left" : "right";
+    lsSet("mp-pos", r.left + "," + r.top);
+    lsSet("mp-side", side);
+    lsSet("mp-tab-y", (r.top + r.height / 2) + "px");
+    showTab(side, r.top + r.height / 2);
+  }
+
+  function fromSide() {
+    tab.classList.remove("mp-show");
+    wrap.classList.remove("mp-side");
+    lsSet("mp-side", "");
+    var pos = (lsGet("mp-pos") || "20,20").split(",");
+    place(parseFloat(pos[0]) || 20, parseFloat(pos[1]) || 20);
+  }
+
+  document.getElementById("mp-side-btn").addEventListener("click", toSide);
+
+  // 侧边小标签：拖动改位置，点击展开
+  var tabDrag = false, tSY = 0, tOY = 0, moved = false;
+  tab.addEventListener("pointerdown", function (e) {
+    tabDrag = true; moved = false;
+    tSY = e.clientY;
+    tOY = parseFloat(tab.style.top) || 0;
+    try { tab.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  tab.addEventListener("pointermove", function (e) {
+    if (!tabDrag) return;
+    var dy = e.clientY - tSY;
+    if (Math.abs(dy) > 4) moved = true;
+    tab.style.top = clamp(tOY + dy, 4, window.innerHeight - 60) + "px";
+  });
+  function tabEnd(e) {
+    if (!tabDrag) return;
+    tabDrag = false;
+    try { tab.releasePointerCapture(e.pointerId); } catch (err) {}
+    if (moved) { lsSet("mp-tab-y", tab.style.top); } else { fromSide(); }
+  }
+  tab.addEventListener("pointerup", tabEnd);
+  tab.addEventListener("pointercancel", tabEnd);
+
+  window.addEventListener("resize", function () {
+    if (wrap.classList.contains("mp-side")) {
+      tab.style.top = clamp(parseFloat(tab.style.top) || 0, 4, window.innerHeight - 60) + "px";
+    } else {
+      var r = wrap.getBoundingClientRect();
+      place(r.left, r.top);
+    }
+  });
+
+  // ---------- 恢复上次状态 ----------
+  var pos = lsGet("mp-pos");
+  if (pos) {
+    var a = pos.split(",");
+    place(parseFloat(a[0]) || 20, parseFloat(a[1]) || 20);
+  }
+  var side = lsGet("mp-side");
+  if (side === "left" || side === "right") {
+    showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
+  }
+})();
+</script>

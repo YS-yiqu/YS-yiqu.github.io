@@ -1,0 +1,90 @@
+{{- /* 背景音乐播放器的样式（APlayer + 自定义可拖动悬浮外壳） */ -}}
+<link rel="stylesheet" href="/lib/APlayer.min.css">
+<style>
+  #mp-wrap {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 9990;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .18);
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  #mp-wrap.mp-side { display: none; }
+  #mp-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background: #4a90d9;
+    color: #fff;
+    cursor: default;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  #mp-bar .mp-dot {
+    cursor: move;
+    touch-action: none;
+    padding: 0 3px;
+    font-size: 15px;
+    opacity: .85;
+  }
+  #mp-bar select {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    border-radius: 5px;
+    padding: 3px 6px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, .94);
+    color: #333;
+    cursor: pointer;
+  }
+  #mp-bar button {
+    border: 0;
+    background: rgba(255, 255, 255, .2);
+    color: #fff;
+    border-radius: 5px;
+    height: 22px;
+    padding: 0 5px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  #mp-body { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
+  #mp-wrap.mp-open #mp-body { max-height: 460px; }
+  #mp-wrap .aplayer { margin: 0; border-radius: 0; box-shadow: none; background: #fff; }
+  #mp-wrap .aplayer .aplayer-info { border-bottom: 1px solid #f0f0f0; }
+
+  /* 贴边收起后的小标签 */
+  #mp-tab {
+    position: fixed;
+    top: 50%;
+    z-index: 9990;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 56px;
+    background: #4a90d9;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .22);
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+  }
+  #mp-tab.mp-show { display: flex; }
+  #mp-tab.mp-right { left: auto; right: 0; border-radius: 8px 0 0 8px; }
+  #mp-tab.mp-left { left: 0; right: auto; }
+
+  @media (max-width: 480px) {
+    #mp-wrap { width: calc(100vw - 24px); left: 12px; bottom: 12px; }
+  }
+</style>
