@@ -1,16 +1,20 @@
-{{- /* 标签页动态标题：切走标签时换标题，切回后 2 秒恢复原标题 */ -}}
+{{- /* 标签页动态标题：切走标签时换标题，切回后 2 秒恢复原标题。
+       无刷新跳转下本段脚本会在每次换页时再执行一次，故只挂一次监听，
+       原标题改为切走那一刻动态取（否则换页后恢复的是上一页的标题）。 */ -}}
 <script>
 (function () {
-  var originTitle = document.title;
+  if (window.__mpTitleHook) return;
+  window.__mpTitleHook = true;
   var titleTime;
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
       clearTimeout(titleTime);
+      window.__mpRealTitle = document.title;
       document.title = "你别走吖 Σ(っ °Д °;)っ";
     } else {
       document.title = "(/≧▽≦/)你又回来啦！";
       titleTime = setTimeout(function () {
-        document.title = originTitle;
+        document.title = window.__mpRealTitle || document.title;
       }, 2000);
     }
   });
@@ -18,7 +22,7 @@
 </script>
 
 {{- /* 背景音乐播放器：APlayer + 自建 Meting API。可拖动、可切歌单、可折叠到侧边。 */ -}}
-<div id="mp-wrap">
+<div id="mp-wrap" data-turbo-permanent>
   <div id="mp-bar">
     <span class="mp-dot" title="按住拖动">⠿</span>
     <select id="mp-sel" title="切换歌单"></select>
@@ -29,10 +33,15 @@
     <div id="blog-music-player"></div>
   </div>
 </div>
-<div id="mp-tab" title="点开播放器">♪</div>
-<script src="/lib/APlayer.min.js"></script>
+<div id="mp-tab" data-turbo-permanent title="点开播放器">♪</div>
 <script>
 (function () {
+  // 无刷新跳转下本段脚本每次换页都会被再执行一遍：初始化只做一次，
+  // 播放器外壳与 APlayer 生成的 <audio> 都是 Turbo 永久元素，换页时原地保留、歌曲不断。
+  if (window.__mpBooted) return;
+  window.__mpBooted = true;
+
+  function boot() {
   var API = "https://dh2600-7cd9.tailcc5f1e.ts.net/api?server=netease&type=playlist&id=";
   var LISTS = [
     { id: "712921826",  name: "喜欢的音乐" },
@@ -213,5 +222,56 @@
   if (side === "left" || side === "right") {
     showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
   }
+  }
+
+  // APlayer 只在首次加载时拉一次，之后跨页复用同一个全局对象
+  if (typeof APlayer === "undefined") {
+    var s = document.createElement("script");
+    s.src = "/lib/APlayer.min.js";
+    s.onload = boot;
+    s.onerror = function () { window.__mpBooted = false; };
+    document.head.appendChild(s);
+  } else {
+    boot();
+  }
+})();
+</script>
+
+{{- /* 搜索页的搜索脚本打包在 <head> 里（带指纹的 search.<hash>.js），
+       无刷新跳转时 Turbo 不会重新执行 head 里的脚本，搜索框会一直停在禁用状态；
+       这里在进入搜索页后把该脚本再注入一次，并补发一次 load 事件触发它的初始化。
+       拿不到脚本地址时兜底整页加载一次（只会兜底一次，避免死循环）。 */ -}}
+<script>
+(function () {
+  if (window.__mpSearchBoot) return;
+  window.__mpSearchBoot = true;
+
+  function ensureSearch() {
+    if (location.pathname.indexOf("/search") !== 0) return;
+    var input = document.getElementById("searchInput");
+    if (!input || !input.disabled) return;
+
+    var src = null;
+    var tags = document.querySelectorAll('script[src*="/assets/js/search"]');
+    for (var i = 0; i < tags.length; i++) src = tags[i].getAttribute("src");
+    if (!src) {
+      try {
+        if (!sessionStorage.getItem("mp-search-reload")) {
+          sessionStorage.setItem("mp-search-reload", "1");
+          location.reload();
+        }
+      } catch (e) {}
+      return;
+    }
+
+    var el = document.createElement("script");
+    el.src = src;
+    el.onload = function () {
+      try { window.dispatchEvent(new Event("load")); } catch (e) {}
+    };
+    document.head.appendChild(el);
+  }
+
+  document.addEventListener("turbo:load", function () { setTimeout(ensureSearch, 250); });
 })();
 </script>

@@ -1,3 +1,10 @@
+{{- /* 站内跳转改为无刷新（Turbo Drive）：点链接只换正文，播放中的歌曲不中断 */ -}}
+<script src="/lib/turbo.min.js"></script>
+<style>
+  /* 关掉 Turbo 自带的顶部进度条，保持原有视觉 */
+  .turbo-progress-bar { display: none !important; }
+</style>
+
 {{- /* 背景音乐播放器的样式（APlayer + 自定义可拖动悬浮外壳） */ -}}
 <link rel="stylesheet" href="/lib/APlayer.min.css">
 <style>
