@@ -8,6 +8,12 @@ categories: ["学习笔记"]
 draft: false
 ---
 
+<style>
+/* 本文小节标题自带「一、二、三」序号，关掉自动编号徽章，避免重号 */
+.post-single .post-content > h2 { gap: 0; }
+.post-single .post-content > h2::before { display: none; }
+</style>
+
 ## 一、一堆安全要求，凭什么信它？
 
 某天在现场，安全员/监理随口说了几句动火作业的要求：「动火要分级」「得有作业票」「配一组灭火器」「焊工得有证」——零零散散记了 9 条。
