@@ -42,7 +42,7 @@
   window.__mpBooted = true;
 
   function boot() {
-  var API = "https://dh2600-7cd9.tailcc5f1e.ts.net/api?server=netease&type=playlist&id=";
+  var API = "https://meting-workers.ys-yiqu-travel.workers.dev/?server=netease&type=playlist&id=";
   var LISTS = [
     { id: "712921826",  name: "喜欢的音乐" },
     { id: "2694335558", name: "花粥" },
@@ -95,7 +95,7 @@
         if (!Array.isArray(list) || !list.length) return;
         ap.list.clear();
         ap.list.add(list.map(function (s) {
-          return { name: s.title, artist: s.author, url: s.url, cover: s.pic, lrc: s.lrc };
+          return { name: s.title || s.name, artist: s.author || s.artist, url: s.url, cover: s.pic, lrc: s.lrc };
         }));
         lsSet("mp-list", id);
       })
