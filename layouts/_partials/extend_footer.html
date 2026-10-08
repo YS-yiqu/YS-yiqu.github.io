@@ -26,6 +26,7 @@
   <div id="mp-bar">
     <span class="mp-dot" title="按住拖动">⠿</span>
     <select id="mp-sel" title="切换歌单"></select>
+    <select id="mp-br" title="音质"></select>
     <button id="mp-side-btn" title="折叠到侧边">侧</button>
     <button id="mp-toggle" title="收起 / 展开">▾</button>
   </div>
@@ -76,6 +77,28 @@
     sel.appendChild(o);
   });
 
+  // ---------- 音质切换（默认无损）----------
+  var BRS = [
+    { v: "999", name: "无损" },
+    { v: "320", name: "320K" },
+    { v: "128", name: "128K" }
+  ];
+  var brSel = document.getElementById("mp-br");
+  BRS.forEach(function (b) {
+    var o = document.createElement("option");
+    o.value = b.v;
+    o.textContent = b.name;
+    brSel.appendChild(o);
+  });
+  var br = lsGet("mp-br");
+  if (!BRS.some(function (b) { return b.v === br; })) br = "999";
+  brSel.value = br;
+  brSel.addEventListener("change", function () {
+    br = brSel.value;
+    lsSet("mp-br", br);
+    load(sel.value);
+  });
+
   var ap = new APlayer({
     container: document.getElementById("blog-music-player"),
     audio: [],
@@ -92,7 +115,7 @@
 
   function load(id) {
     function pull(api) {
-      return fetch(api + id).then(function (r) { return r.json(); });
+      return fetch(api + id + "&br=" + br).then(function (r) { return r.json(); });
     }
     pull(API)
       .then(function (list) {
