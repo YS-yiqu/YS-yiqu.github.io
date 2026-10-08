@@ -27,8 +27,17 @@
     <span class="mp-dot" title="按住拖动">⠿</span>
     <select id="mp-sel" title="切换歌单"></select>
     <select id="mp-br" title="音质"></select>
+    <button id="mp-dice" title="随机听一批（从榜单里抽）">🎲</button>
+    <button id="mp-add" title="把当前歌曲加进网易云歌单">＋</button>
     <button id="mp-side-btn" title="折叠到侧边">侧</button>
     <button id="mp-toggle" title="收起 / 展开">▾</button>
+  </div>
+  <div id="mp-cfg" hidden>
+    <input id="mp-cfg-token" type="password" placeholder="写入口令" autocomplete="off">
+    <button id="mp-cfg-load">读取歌单</button>
+    <select id="mp-cfg-pl" title="目标歌单"></select>
+    <button id="mp-cfg-save">保存</button>
+    <span id="mp-msg"></span>
   </div>
   <div id="mp-body">
     <div id="blog-music-player"></div>
@@ -58,7 +67,11 @@
     { id: "7379089107", name: "成长" },
     { id: "12278756216", name: "缱绻" },
     { id: "7681170372", name: "女氓" },
-    { id: "12451708040", name: "后悔" }
+    { id: "12451708040", name: "后悔" },
+    { id: "3778678",    name: "🏆 热歌榜" },
+    { id: "19723756",   name: "📈 飙升榜" },
+    { id: "3779629",    name: "🆕 新歌榜" },
+    { id: "2884035",    name: "✍ 原创榜" }
   ];
 
   var wrap = document.getElementById("mp-wrap");
@@ -139,6 +152,95 @@
   sel.value = start;
   sel.addEventListener("change", function () { load(sel.value); });
   load(start);
+
+  // ---------- 随机听一批 / 加进网易云歌单 ----------
+  var WRITE_BASE = "https://meting-workers.ys-yiqu-travel.workers.dev";
+  var CHARTS = ["3778678", "19723756", "3779629", "2884035"];
+  var cfg = document.getElementById("mp-cfg");
+  var cfgToken = document.getElementById("mp-cfg-token");
+  var cfgPl = document.getElementById("mp-cfg-pl");
+  var msgEl = document.getElementById("mp-msg");
+  var msgTimer;
+
+  function say(text) {
+    msgEl.textContent = text;
+    clearTimeout(msgTimer);
+    msgTimer = setTimeout(function () { msgEl.textContent = ""; }, 5000);
+  }
+
+  function currentSongId() {
+    try {
+      var cur = ap.list.audios[ap.list.index];
+      var m = cur && cur.url ? /[?&]id=(\d+)/.exec(cur.url) : null;
+      return m ? m[1] : "";
+    } catch (e) { return ""; }
+  }
+
+  function addCurrentToPlaylist(sid, token, pid) {
+    say("正在加入…");
+    fetch(WRITE_BASE + "/write/add?op=add&id=" + sid + "&pid=" + pid + "&token=" + encodeURIComponent(token))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.ok) {
+          say("已加入「" + (lsGet("mp-pid-name") || "歌单") + "」");
+        } else {
+          say("没加上：" + ((d && (d.error || d.message)) || "未知原因"));
+        }
+      })
+      .catch(function () { say("请求失败，检查网络或口令"); });
+  }
+
+  document.getElementById("mp-dice").addEventListener("click", function () {
+    var pick = CHARTS[Math.floor(Math.random() * CHARTS.length)];
+    sel.value = pick;
+    load(pick);
+    var opt = sel.options[sel.selectedIndex];
+    say("随机一批：" + (opt ? opt.textContent : pick));
+  });
+
+  document.getElementById("mp-add").addEventListener("click", function () {
+    var sid = currentSongId();
+    if (!sid) { say("先放一首歌，再点＋"); return; }
+    var token = lsGet("mp-token") || "";
+    var pid = lsGet("mp-pid") || "";
+    if (!token || !pid) {
+      cfgToken.value = token;
+      cfg.hidden = false;
+      say("先填口令、读取歌单选一个保存，只用做一次");
+      return;
+    }
+    addCurrentToPlaylist(sid, token, pid);
+  });
+
+  document.getElementById("mp-cfg-load").addEventListener("click", function () {
+    var token = cfgToken.value.trim();
+    if (!token) { say("先填写入口令"); return; }
+    say("读取歌单中…");
+    fetch(WRITE_BASE + "/write/playlists?token=" + encodeURIComponent(token))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok) { say("读取失败：" + ((d && d.error) || "口令或登录态无效")); return; }
+        cfgPl.innerHTML = "";
+        d.playlists.forEach(function (p) {
+          var o = document.createElement("option");
+          o.value = p.id;
+          o.textContent = p.name + "（" + p.trackCount + " 首）";
+          cfgPl.appendChild(o);
+        });
+        say("读到 " + d.playlists.length + " 个歌单，选一个保存");
+      })
+      .catch(function () { say("请求失败，检查网络"); });
+  });
+
+  document.getElementById("mp-cfg-save").addEventListener("click", function () {
+    var token = cfgToken.value.trim();
+    if (!token || !cfgPl.value) { say("口令和歌单都要有"); return; }
+    lsSet("mp-token", token);
+    lsSet("mp-pid", cfgPl.value);
+    lsSet("mp-pid-name", cfgPl.options[cfgPl.selectedIndex].textContent.replace(/（.*$/, ""));
+    cfg.hidden = true;
+    say("已保存，以后点＋就加进这个歌单");
+  });
 
   // ---------- 收起 / 展开 ----------
   var toggle = document.getElementById("mp-toggle");

@@ -68,6 +68,43 @@
   #mp-wrap.mp-open #mp-body { max-height: 460px; }
   #mp-wrap .aplayer { margin: 0; border-radius: 0; box-shadow: none; background: #fff; }
   #mp-wrap .aplayer .aplayer-info { border-bottom: 1px solid #f0f0f0; }
+  #mp-bar #mp-dice, #mp-bar #mp-add { flex: 0 0 auto; }
+  #mp-cfg {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+    background: #f4f7fb;
+    border-bottom: 1px solid #e6ebf2;
+    font-size: 12px;
+  }
+  #mp-cfg[hidden] { display: none; }
+  #mp-cfg input {
+    width: 108px;
+    border: 1px solid #cfd8e3;
+    border-radius: 5px;
+    padding: 3px 6px;
+    font-size: 12px;
+  }
+  #mp-cfg select {
+    max-width: 148px;
+    border: 1px solid #cfd8e3;
+    border-radius: 5px;
+    padding: 3px 4px;
+    font-size: 12px;
+    flex: 1;
+  }
+  #mp-cfg button {
+    border: 0;
+    background: #4a90d9;
+    color: #fff;
+    border-radius: 5px;
+    padding: 3px 7px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  #mp-msg { color: #4a90d9; }
 
   /* 贴边收起后的小标签 */
   #mp-tab {
