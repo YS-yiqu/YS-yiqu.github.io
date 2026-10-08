@@ -42,7 +42,9 @@
   window.__mpBooted = true;
 
   function boot() {
-  var API = "https://meting-workers.ys-yiqu-travel.workers.dev/?server=netease&type=playlist&id=";
+  // 主源：公开 Meting 实例（会员歌也能取到整曲）；备源：自建 Worker（主源拿不到时兜底）
+  var API = "https://api.qijieya.cn/meting/?server=netease&type=playlist&id=";
+  var API_BAK = "https://meting-workers.ys-yiqu-travel.workers.dev/?server=netease&type=playlist&id=";
   var LISTS = [
     { id: "712921826",  name: "喜欢的音乐" },
     { id: "2694335558", name: "花粥" },
@@ -89,8 +91,15 @@
   });
 
   function load(id) {
-    fetch(API + id)
-      .then(function (r) { return r.json(); })
+    function pull(api) {
+      return fetch(api + id).then(function (r) { return r.json(); });
+    }
+    pull(API)
+      .then(function (list) {
+        if (Array.isArray(list) && list.length) return list;
+        return pull(API_BAK);
+      })
+      .catch(function () { return pull(API_BAK); })
       .then(function (list) {
         if (!Array.isArray(list) || !list.length) return;
         ap.list.clear();
