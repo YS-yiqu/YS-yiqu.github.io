@@ -38,6 +38,7 @@
     <select id="mp-cfg-pl" title="目标歌单"></select>
     <button id="mp-cfg-save">保存</button>
     <span id="mp-msg"></span>
+    <a id="mp-cfg-open" href="javascript:void(0)" hidden>换歌单</a>
   </div>
   <div id="mp-body">
     <div id="blog-music-player"></div>
@@ -160,12 +161,22 @@
   var cfgToken = document.getElementById("mp-cfg-token");
   var cfgPl = document.getElementById("mp-cfg-pl");
   var msgEl = document.getElementById("mp-msg");
+  var cfgOpenEl = document.getElementById("mp-cfg-open");
+  var addBtn = document.getElementById("mp-add");
   var msgTimer;
 
   function say(text) {
     msgEl.textContent = text;
     clearTimeout(msgTimer);
-    msgTimer = setTimeout(function () { msgEl.textContent = ""; }, 5000);
+    msgTimer = setTimeout(function () { msgEl.textContent = ""; }, 10000);
+  }
+
+  function refreshAddTip() {
+    var name = lsGet("mp-pid-name") || "";
+    if (lsGet("mp-token") && lsGet("mp-pid")) {
+      cfgOpenEl.hidden = false;
+      addBtn.title = "把当前歌曲加进「" + name + "」（点「换歌单」可改）";
+    }
   }
 
   function currentSongId() {
@@ -183,11 +194,14 @@
       .then(function (d) {
         if (d && d.ok) {
           say("已加入「" + (lsGet("mp-pid-name") || "歌单") + "」");
+          cfgOpenEl.hidden = false;
         } else {
-          say("没加上：" + ((d && (d.error || d.message)) || "未知原因"));
+          var why = (d && (d.error || d.message)) || "未知原因";
+          say("没加上：" + why);
+          if (/口令|Cookie|登录/.test(why)) { cfg.hidden = false; }
         }
       })
-      .catch(function () { say("请求失败，检查网络或口令"); });
+      .catch(function () { say("请求失败，检查网络"); });
   }
 
   document.getElementById("mp-dice").addEventListener("click", function () {
@@ -198,18 +212,24 @@
     say("随机一批：" + (opt ? opt.textContent : pick));
   });
 
-  document.getElementById("mp-add").addEventListener("click", function () {
+  addBtn.addEventListener("click", function () {
     var sid = currentSongId();
-    if (!sid) { say("先放一首歌，再点＋"); return; }
+    if (!sid) { say("先放一首歌，再点 ＋"); return; }
     var token = lsGet("mp-token") || "";
     var pid = lsGet("mp-pid") || "";
     if (!token || !pid) {
       cfgToken.value = token;
       cfg.hidden = false;
-      say("先填口令、读取歌单选一个保存，只用做一次");
+      say("先填口令 → 点「读取歌单」→ 选一个歌单 → 点「保存」，只用做一次");
       return;
     }
     addCurrentToPlaylist(sid, token, pid);
+  });
+
+  cfgOpenEl.addEventListener("click", function () {
+    cfgToken.value = lsGet("mp-token") || "";
+    cfg.hidden = false;
+    say("改歌单：点「读取歌单」再选一个保存");
   });
 
   document.getElementById("mp-cfg-load").addEventListener("click", function () {
@@ -239,8 +259,11 @@
     lsSet("mp-pid", cfgPl.value);
     lsSet("mp-pid-name", cfgPl.options[cfgPl.selectedIndex].textContent.replace(/（.*$/, ""));
     cfg.hidden = true;
-    say("已保存，以后点＋就加进这个歌单");
+    refreshAddTip();
+    say("已保存：以后点 ＋ 就加进「" + (lsGet("mp-pid-name") || "歌单") + "」");
   });
+
+  refreshAddTip();
 
   // ---------- 收起 / 展开 ----------
   var toggle = document.getElementById("mp-toggle");
