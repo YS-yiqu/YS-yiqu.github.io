@@ -106,6 +106,19 @@
   }
   #mp-msg { color: #4a90d9; }
   #mp-cfg a { color: #4a90d9; font-size: 12px; text-decoration: underline; cursor: pointer; }
+  #mp-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    background: #f4f7fb;
+    border-bottom: 1px solid #e6ebf2;
+    font-size: 12px;
+    color: #4a90d9;
+    min-height: 18px;
+  }
+  #mp-note[hidden] { display: none; }
+  #mp-note a { color: #4a90d9; text-decoration: underline; cursor: pointer; }
 
   /* 贴边收起后的小标签 */
   #mp-tab {

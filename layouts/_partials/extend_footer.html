@@ -32,13 +32,12 @@
     <button id="mp-side-btn" title="折叠到侧边">侧</button>
     <button id="mp-toggle" title="收起 / 展开">▾</button>
   </div>
+  <div id="mp-note" hidden><span id="mp-msg"></span><a id="mp-cfg-open" href="javascript:void(0)" hidden>换歌单</a></div>
   <div id="mp-cfg" hidden>
     <input id="mp-cfg-token" type="password" placeholder="写入口令" autocomplete="off">
     <button id="mp-cfg-load">读取歌单</button>
     <select id="mp-cfg-pl" title="目标歌单"></select>
     <button id="mp-cfg-save">保存</button>
-    <span id="mp-msg"></span>
-    <a id="mp-cfg-open" href="javascript:void(0)" hidden>换歌单</a>
   </div>
   <div id="mp-body">
     <div id="blog-music-player"></div>
@@ -161,14 +160,16 @@
   var cfgToken = document.getElementById("mp-cfg-token");
   var cfgPl = document.getElementById("mp-cfg-pl");
   var msgEl = document.getElementById("mp-msg");
+  var noteEl = document.getElementById("mp-note");
   var cfgOpenEl = document.getElementById("mp-cfg-open");
   var addBtn = document.getElementById("mp-add");
   var msgTimer;
 
   function say(text) {
+    noteEl.hidden = false;
     msgEl.textContent = text;
     clearTimeout(msgTimer);
-    msgTimer = setTimeout(function () { msgEl.textContent = ""; }, 10000);
+    msgTimer = setTimeout(function () { refreshAddTip(); }, 8000);
   }
 
   function refreshAddTip() {
@@ -176,6 +177,12 @@
     if (lsGet("mp-token") && lsGet("mp-pid")) {
       cfgOpenEl.hidden = false;
       addBtn.title = "把当前歌曲加进「" + name + "」（点「换歌单」可改）";
+      msgEl.textContent = "点 ＋ 把当前歌曲加进「" + name + "」";
+      noteEl.hidden = false;
+    } else {
+      cfgOpenEl.hidden = true;
+      msgEl.textContent = "";
+      noteEl.hidden = true;
     }
   }
 
