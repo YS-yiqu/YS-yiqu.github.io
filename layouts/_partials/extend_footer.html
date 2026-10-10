@@ -55,6 +55,19 @@
   // 主源：公开 Meting 实例（会员歌也能取到整曲）；备源：自建 Worker（主源拿不到时兜底）
   var API = "https://api.qijieya.cn/meting/?server=netease&type=playlist&id=";
   var API_BAK = "https://meting-workers.ys-yiqu-travel.workers.dev/?server=netease&type=playlist&id=";
+  // 网易云已下架 / 取不到音频的曲目 → 换酷狗音源兜底（键 = 网易云歌曲 id）
+  // 下表均为同名同歌手、已实测可播；以后新增只需加一行 "网易云id": { server: "kugou", id: "酷狗id" }
+  var URL_API = "https://api.qijieya.cn/meting/?server=";
+  var FALLBACK = {
+    "5261634":    { server: "kugou", id: "4d985d62ffe3d935d626b75c3d23a720" }, // 青春舞曲 - 阿木提
+    "25986095":   { server: "kugou", id: "b085417fdd24d334c1d0bdfe515598ba" }, // 大城小爱 - 王力宏
+    "35625821":   { server: "kugou", id: "d32f239b743b19984cf005f01264a4e0" }, // 记念 - RAiNBOW计划/雷雨心
+    "1342505565": { server: "kugou", id: "17954a0eebc4f5c547fd19886dfcf7a9" }, // 丹歌惊鸿 - 坡上村孙骁
+    "1446292805": { server: "kugou", id: "e435a608ca71efcd03ff2fa2746d7999" }, // 心猿归正 - 刘世超
+    "2159935343": { server: "kugou", id: "a54ff571d6e85b2065d0f4210c1d94cf" }, // 梦想天空分外蓝 - 陈奕迅
+    "2160820186": { server: "kugou", id: "f57b2c01b9ea6a20623c8880cbe8d4c5" }, // 菊花台 - 周杰伦
+    "2653763768": { server: "kugou", id: "3374b203b82a36af57099487d63601d4" }  // 你曾是少年 - S.H.E
+  };
   var LISTS = [
     { id: "712921826",  name: "喜欢的音乐" },
     { id: "18471041672", name: "翀宝儿" },
@@ -141,7 +154,16 @@
         if (!Array.isArray(list) || !list.length) return;
         ap.list.clear();
         ap.list.add(list.map(function (s) {
-          return { name: s.title || s.name, artist: s.author || s.artist, url: s.url, cover: s.pic, lrc: s.lrc };
+          var m = /[?&]id=(\d+)/.exec(s.url || "");
+          var nid = m ? m[1] : "";
+          var fb = nid && FALLBACK[nid];
+          return {
+            name: s.title || s.name,
+            artist: s.author || s.artist,
+            url: fb ? (URL_API + fb.server + "&type=url&id=" + fb.id + "&br=" + br + "&nid=" + nid) : s.url,
+            cover: s.pic,
+            lrc: s.lrc
+          };
         }));
         lsSet("mp-list", id);
       })
@@ -190,7 +212,7 @@
   function currentSongId() {
     try {
       var cur = ap.list.audios[ap.list.index];
-      var m = cur && cur.url ? /[?&]id=(\d+)/.exec(cur.url) : null;
+      var m = cur && cur.url ? (/[?&]nid=(\d+)/.exec(cur.url) || /[?&]id=(\d+)/.exec(cur.url)) : null;
       return m ? m[1] : "";
     } catch (e) { return ""; }
   }
