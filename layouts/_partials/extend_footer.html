@@ -27,6 +27,8 @@
     <span class="mp-dot" title="按住拖动">⠿</span>
     <select id="mp-sel" title="切换歌单"></select>
     <select id="mp-br" title="音质"></select>
+    <button id="mp-prev" title="上一首（←）">‹</button>
+    <button id="mp-next" title="下一首（→）">›</button>
     <button id="mp-dice" title="随机听一批（从榜单里抽）">🎲</button>
     <button id="mp-add" title="把当前歌曲加进网易云歌单">＋</button>
     <button id="mp-side-btn" title="折叠到侧边">侧</button>
@@ -169,6 +171,35 @@
       })
       .catch(function () {});
   }
+
+  // ---------- 上一首 / 下一首 ----------
+  // 点一下就换曲，并让提示行报出换到了哪首（只提示 2 秒，之后恢复「点 ＋ 加入歌单」的常态提示）
+  function nowPlaying() {
+    var c = ap.list.audios[ap.list.index] || {};
+    return c.name ? (c.name + (c.artist ? " - " + c.artist : "")) : "";
+  }
+
+  function skip(dir) {
+    if (ap.list.audios.length < 2) { say("当前歌单只有一首"); return; }
+    if (dir < 0) { ap.skipBack(); } else { ap.skipForward(); }
+    var who = nowPlaying();
+    clearTimeout(msgTimer);
+    noteEl.hidden = false;
+    msgEl.textContent = who ? (dir < 0 ? "上一首：" : "下一首：") + who : (dir < 0 ? "上一首" : "下一首");
+    msgTimer = setTimeout(function () { refreshAddTip(); }, 2000);
+  }
+
+  document.getElementById("mp-prev").addEventListener("click", function () { skip(-1); });
+  document.getElementById("mp-next").addEventListener("click", function () { skip(1); });
+
+  // 桌面端键盘：← / → 换曲。输入框与歌单/音质下拉里按键不抢
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    var t = e.target || {};
+    if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable) return;
+    skip(e.key === "ArrowLeft" ? -1 : 1);
+  });
 
   var start = lsGet("mp-list");
   if (!LISTS.some(function (p) { return p.id === start; })) start = LISTS[0].id;
