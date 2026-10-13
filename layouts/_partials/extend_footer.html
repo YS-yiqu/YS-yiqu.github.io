@@ -26,20 +26,17 @@
   <div id="mp-bar">
     <span class="mp-dot" title="按住拖动">⠿</span>
     <select id="mp-sel" title="切换歌单"></select>
-    <select id="mp-br" title="音质"></select>
     <button id="mp-prev" title="上一首（←）">‹</button>
     <button id="mp-next" title="下一首（→）">›</button>
-    <button id="mp-dice" title="随机听一批（从榜单里抽）">🎲</button>
-    <button id="mp-add" title="把当前歌曲加进网易云歌单">＋</button>
+    <button id="mp-find-btn" title="搜歌：先查我的歌单，没有再去网易云搜">🔍</button>
     <button id="mp-side-btn" title="折叠到侧边">侧</button>
     <button id="mp-toggle" title="收起 / 展开">▾</button>
   </div>
-  <div id="mp-note" hidden><span id="mp-msg"></span><a id="mp-cfg-open" href="javascript:void(0)" hidden>换歌单</a></div>
-  <div id="mp-cfg" hidden>
-    <input id="mp-cfg-token" type="password" placeholder="写入口令" autocomplete="off">
-    <button id="mp-cfg-load">读取歌单</button>
-    <select id="mp-cfg-pl" title="目标歌单"></select>
-    <button id="mp-cfg-save">保存</button>
+  <div id="mp-note" hidden><span id="mp-msg"></span></div>
+  <div id="mp-undo" hidden><a id="mp-undo-link" href="javascript:void(0)">撤掉刚加进来的这首</a><span id="mp-undo-what"></span></div>
+  <div id="mp-find" hidden>
+    <input id="mp-find-kw" type="search" placeholder="搜歌名或歌手，回车" autocomplete="off" enterkeyhint="search">
+    <button id="mp-find-go">搜索</button>
   </div>
   <div id="mp-body">
     <div id="blog-music-player"></div>
@@ -83,11 +80,7 @@
     { id: "7379089107", name: "成长" },
     { id: "12278756216", name: "缱绻" },
     { id: "7681170372", name: "女氓" },
-    { id: "12451708040", name: "后悔" },
-    { id: "3778678",    name: "🏆 热歌榜" },
-    { id: "19723756",   name: "📈 飙升榜" },
-    { id: "3779629",    name: "🆕 新歌榜" },
-    { id: "2884035",    name: "✍ 原创榜" }
+    { id: "12451708040", name: "后悔" }
   ];
 
   var wrap = document.getElementById("mp-wrap");
@@ -96,6 +89,9 @@
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // 搜歌加进来的曲目（只活在当前页面里，切歌单/刷新就回原样），撤掉入口据此显示
+  var added = [];
 
   // ---------- 歌单切换 ----------
   var sel = document.getElementById("mp-sel");
@@ -106,27 +102,8 @@
     sel.appendChild(o);
   });
 
-  // ---------- 音质切换（默认无损）----------
-  var BRS = [
-    { v: "999", name: "无损" },
-    { v: "320", name: "320K" },
-    { v: "128", name: "128K" }
-  ];
-  var brSel = document.getElementById("mp-br");
-  BRS.forEach(function (b) {
-    var o = document.createElement("option");
-    o.value = b.v;
-    o.textContent = b.name;
-    brSel.appendChild(o);
-  });
-  var br = lsGet("mp-br");
-  if (!BRS.some(function (b) { return b.v === br; })) br = "999";
-  brSel.value = br;
-  brSel.addEventListener("change", function () {
-    br = brSel.value;
-    lsSet("mp-br", br);
-    load(sel.value);
-  });
+  // 音质固定无损（999），不再给切换入口；要改回来就把这里改掉
+  var br = "999";
 
   var ap = new APlayer({
     container: document.getElementById("blog-music-player"),
@@ -142,32 +119,42 @@
     lrcType: 3
   });
 
-  function load(id) {
-    function pull(api) {
+  // 单曲映射：网易云下架 / 取不到音频的（见 FALLBACK 表）换酷狗音源
+  function mapSong(s) {
+    var m = /[?&]id=(\d+)/.exec(s.url || "");
+    var nid = m ? m[1] : "";
+    var fb = nid && FALLBACK[nid];
+    return {
+      name: s.title || s.name,
+      artist: s.author || s.artist,
+      url: fb ? (URL_API + fb.server + "&type=url&id=" + fb.id + "&br=" + br + "&nid=" + nid) : s.url,
+      cover: s.pic,
+      lrc: s.lrc
+    };
+  }
+
+  // 取一张歌单的原始数据：主源失败或返回空就切备源
+  function pull(id) {
+    function one(api) {
       return fetch(api + id + "&br=" + br).then(function (r) { return r.json(); });
     }
-    pull(API)
+    return one(API)
       .then(function (list) {
         if (Array.isArray(list) && list.length) return list;
-        return pull(API_BAK);
+        return one(API_BAK);
       })
-      .catch(function () { return pull(API_BAK); })
+      .catch(function () { return one(API_BAK); });
+  }
+
+  function load(id, onDone) {
+    pull(id)
       .then(function (list) {
         if (!Array.isArray(list) || !list.length) return;
         ap.list.clear();
-        ap.list.add(list.map(function (s) {
-          var m = /[?&]id=(\d+)/.exec(s.url || "");
-          var nid = m ? m[1] : "";
-          var fb = nid && FALLBACK[nid];
-          return {
-            name: s.title || s.name,
-            artist: s.author || s.artist,
-            url: fb ? (URL_API + fb.server + "&type=url&id=" + fb.id + "&br=" + br + "&nid=" + nid) : s.url,
-            cover: s.pic,
-            lrc: s.lrc
-          };
-        }));
+        ap.list.add(list.map(mapSong));
         lsSet("mp-list", id);
+        clearAdded();
+        if (onDone) onDone();
       })
       .catch(function () {});
   }
@@ -186,7 +173,7 @@
     clearTimeout(msgTimer);
     noteEl.hidden = false;
     msgEl.textContent = who ? (dir < 0 ? "上一首：" : "下一首：") + who : (dir < 0 ? "上一首" : "下一首");
-    msgTimer = setTimeout(function () { refreshAddTip(); }, 2000);
+    hideNote(2000);
   }
 
   document.getElementById("mp-prev").addEventListener("click", function () { skip(-1); });
@@ -201,130 +188,41 @@
     skip(e.key === "ArrowLeft" ? -1 : 1);
   });
 
+  // 空格：暂停 / 继续（跟常见音乐软件一致；焦点在输入框、下拉里时不抢键）
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== " " && e.key !== "Spacebar" && e.code !== "Space") return;
+    var t = e.target || {};
+    if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable) return;
+    e.preventDefault();
+    try { ap.toggle(); } catch (err) {}
+  });
+
   var start = lsGet("mp-list");
   if (!LISTS.some(function (p) { return p.id === start; })) start = LISTS[0].id;
   sel.value = start;
   sel.addEventListener("change", function () { load(sel.value); });
   load(start);
 
-  // ---------- 随机听一批 / 加进网易云歌单 ----------
+  // ---------- 提示行 ----------
+  // WRITE_BASE 只作搜歌的兜底源：公开实例搜不到时再问一次自建 Worker
   var WRITE_BASE = "https://meting-workers.ys-yiqu-travel.workers.dev";
-  var CHARTS = ["3778678", "19723756", "3779629", "2884035"];
-  var cfg = document.getElementById("mp-cfg");
-  var cfgToken = document.getElementById("mp-cfg-token");
-  var cfgPl = document.getElementById("mp-cfg-pl");
   var msgEl = document.getElementById("mp-msg");
   var noteEl = document.getElementById("mp-note");
-  var cfgOpenEl = document.getElementById("mp-cfg-open");
-  var addBtn = document.getElementById("mp-add");
   var msgTimer;
+
+  function hideNote(delay) {
+    clearTimeout(msgTimer);
+    msgTimer = setTimeout(function () {
+      noteEl.hidden = true;
+      msgEl.textContent = "";
+    }, delay || 8000);
+  }
 
   function say(text) {
     noteEl.hidden = false;
     msgEl.textContent = text;
-    clearTimeout(msgTimer);
-    msgTimer = setTimeout(function () { refreshAddTip(); }, 8000);
+    hideNote(8000);
   }
-
-  function refreshAddTip() {
-    var name = lsGet("mp-pid-name") || "";
-    if (lsGet("mp-token") && lsGet("mp-pid")) {
-      cfgOpenEl.hidden = false;
-      addBtn.title = "把当前歌曲加进「" + name + "」（点「换歌单」可改）";
-      msgEl.textContent = "点 ＋ 把当前歌曲加进「" + name + "」";
-      noteEl.hidden = false;
-    } else {
-      cfgOpenEl.hidden = true;
-      msgEl.textContent = "";
-      noteEl.hidden = true;
-    }
-  }
-
-  function currentSongId() {
-    try {
-      var cur = ap.list.audios[ap.list.index];
-      var m = cur && cur.url ? (/[?&]nid=(\d+)/.exec(cur.url) || /[?&]id=(\d+)/.exec(cur.url)) : null;
-      return m ? m[1] : "";
-    } catch (e) { return ""; }
-  }
-
-  function addCurrentToPlaylist(sid, token, pid) {
-    say("正在加入…");
-    fetch(WRITE_BASE + "/write/add?op=add&id=" + sid + "&pid=" + pid + "&token=" + encodeURIComponent(token))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (d && d.ok) {
-          say("已加入「" + (lsGet("mp-pid-name") || "歌单") + "」");
-          cfgOpenEl.hidden = false;
-        } else {
-          var why = (d && (d.error || d.message)) || "未知原因";
-          say("没加上：" + why);
-          if (/口令|Cookie|登录/.test(why)) { cfg.hidden = false; }
-        }
-      })
-      .catch(function () { say("请求失败，检查网络"); });
-  }
-
-  document.getElementById("mp-dice").addEventListener("click", function () {
-    var pick = CHARTS[Math.floor(Math.random() * CHARTS.length)];
-    sel.value = pick;
-    load(pick);
-    var opt = sel.options[sel.selectedIndex];
-    say("随机一批：" + (opt ? opt.textContent : pick));
-  });
-
-  addBtn.addEventListener("click", function () {
-    var sid = currentSongId();
-    if (!sid) { say("先放一首歌，再点 ＋"); return; }
-    var token = lsGet("mp-token") || "";
-    var pid = lsGet("mp-pid") || "";
-    if (!token || !pid) {
-      cfgToken.value = token;
-      cfg.hidden = false;
-      say("先填口令 → 点「读取歌单」→ 选一个歌单 → 点「保存」，只用做一次");
-      return;
-    }
-    addCurrentToPlaylist(sid, token, pid);
-  });
-
-  cfgOpenEl.addEventListener("click", function () {
-    cfgToken.value = lsGet("mp-token") || "";
-    cfg.hidden = false;
-    say("改歌单：点「读取歌单」再选一个保存");
-  });
-
-  document.getElementById("mp-cfg-load").addEventListener("click", function () {
-    var token = cfgToken.value.trim();
-    if (!token) { say("先填写入口令"); return; }
-    say("读取歌单中…");
-    fetch(WRITE_BASE + "/write/playlists?token=" + encodeURIComponent(token))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d || !d.ok) { say("读取失败：" + ((d && d.error) || "口令或登录态无效")); return; }
-        cfgPl.innerHTML = "";
-        d.playlists.forEach(function (p) {
-          var o = document.createElement("option");
-          o.value = p.id;
-          o.textContent = p.name + "（" + p.trackCount + " 首）";
-          cfgPl.appendChild(o);
-        });
-        say("读到 " + d.playlists.length + " 个歌单，选一个保存");
-      })
-      .catch(function () { say("请求失败，检查网络"); });
-  });
-
-  document.getElementById("mp-cfg-save").addEventListener("click", function () {
-    var token = cfgToken.value.trim();
-    if (!token || !cfgPl.value) { say("口令和歌单都要有"); return; }
-    lsSet("mp-token", token);
-    lsSet("mp-pid", cfgPl.value);
-    lsSet("mp-pid-name", cfgPl.options[cfgPl.selectedIndex].textContent.replace(/（.*$/, ""));
-    cfg.hidden = true;
-    refreshAddTip();
-    say("已保存：以后点 ＋ 就加进「" + (lsGet("mp-pid-name") || "歌单") + "」");
-  });
-
-  refreshAddTip();
 
   // ---------- 收起 / 展开 ----------
   var toggle = document.getElementById("mp-toggle");
@@ -420,6 +318,264 @@
   }
   tab.addEventListener("pointerup", tabEnd);
   tab.addEventListener("pointercancel", tabEnd);
+
+  // ---------- 搜歌：先查我的歌单（当前这张 → 全部 17 张），歌单里没有再去网易云搜 ----------
+  var FIND_KEY = "mp-find-idx";
+  var IDX_TTL = 12 * 3600 * 1000;
+  var findRow = document.getElementById("mp-find");
+  var findKw = document.getElementById("mp-find-kw");
+  var findBtn = document.getElementById("mp-find-go");
+
+  // 撤掉搜歌加进来的曲目：只动「搜索加进来的」，歌单里本来就有的不碰
+  function renderUndo() {
+    var row = document.getElementById("mp-undo");
+    var what = document.getElementById("mp-undo-what");
+    if (!row || !what) return;
+    if (!added.length) { row.hidden = true; what.textContent = ""; return; }
+    row.hidden = false;
+    what.textContent = "《" + added[added.length - 1].text + "》";
+  }
+
+  function clearAdded() { added.length = 0; renderUndo(); }
+
+  function undoAdded() {
+    if (!added.length) return;
+    var last = added[added.length - 1];
+    var i = -1;
+    for (var k = 0; k < ap.list.audios.length; k++) {
+      if (ap.list.audios[k].url === last.url) { i = k; break; }
+    }
+    if (i < 0) { added.pop(); renderUndo(); say("这首已经不在列表里了"); return; }
+    if (ap.list.audios.length <= 1) { say("列表里只剩这一首，撤掉就空了"); return; }
+    // APlayer 的 list.remove 会在删掉的正是当前曲时自动切到相邻一首
+    try { ap.list.remove(i); } catch (e) {}
+    added.pop();
+    say("已撤掉刚加进来的：" + last.text);
+    renderUndo();
+  }
+
+  document.getElementById("mp-undo-link").addEventListener("click", undoAdded);
+
+  // 换曲就收掉撤回入口：它只在「刚加进来、并且还停在这首上」时有意义，不常驻。
+  // 注意 APlayer 的 listswitch 是在写 list.index 之前触发的，得等一拍再判当前曲。
+  ap.on("listswitch", function () {
+    if (!added.length) return;
+    setTimeout(function () {
+      if (!added.length) return;
+      var cur = (ap.list.audios[ap.list.index] || {}).url || "";
+      for (var i = 0; i < added.length; i++) { if (added[i].url === cur) return; }
+      clearAdded();
+    }, 0);
+  });
+
+  // 比对用归一化：去空格、统一小写、去掉各种括号与标点
+  function norm(s) {
+    return String(s == null ? "" : s).toLowerCase()
+      .replace(/[\s\u3000]/g, "")
+      .replace(/[()\[\]{}【】「」《》<>·・,，.。!！?？'"“”‘’:：;；、\-_—~～+&/\\|]/g, "");
+  }
+
+  function toks(kw) {
+    return String(kw || "").split(/[\s\u3000]+/).map(norm).filter(function (t) { return t; });
+  }
+
+  // 命中：关键词每一段都能在「歌名 + 歌手」里找到
+  function matchSong(kw, name, artist) {
+    var hay = norm(name) + "\u0001" + norm(name + " " + artist);
+    var ts = toks(kw);
+    if (!ts.length) return false;
+    for (var i = 0; i < ts.length; i++) { if (hay.indexOf(ts[i]) < 0) return false; }
+    return true;
+  }
+
+  // 打分：同名 > 歌名包含 > 歌手包含，用来从多个候选里挑最像的
+  function scoreSong(kw, name, artist) {
+    var k = norm(kw), n = norm(name), a = norm(artist), s = 0;
+    if (n === k) s += 100;
+    else if (n.indexOf(k) >= 0) s += 60;
+    else if (k.indexOf(n) >= 0) s += 40;
+    if (a.indexOf(k) >= 0) s += 20;
+    var ts = toks(kw), h = 0;
+    for (var i = 0; i < ts.length; i++) {
+      if (n.indexOf(ts[i]) >= 0) h += 2; else if (a.indexOf(ts[i]) >= 0) h += 1;
+    }
+    return s + h;
+  }
+
+  // 在一批曲目里挑最像的，返回 { i, score }；没有就 null
+  function bestOf(songs, kw) {
+    var bi = -1, bs = -1;
+    for (var i = 0; i < songs.length; i++) {
+      var s = songs[i] || {};
+      if (!matchSong(kw, s.name, s.artist)) continue;
+      var sc = scoreSong(kw, s.name, s.artist);
+      if (sc > bs) { bs = sc; bi = i; }
+    }
+    return bi < 0 ? null : { i: bi, score: bs };
+  }
+
+  function findIdx() {
+    try {
+      var d = JSON.parse(lsGet(FIND_KEY) || "null");
+      if (d && d.l && (Date.now() - d.t) < IDX_TTL) return d;
+    } catch (e) {}
+    return null;
+  }
+
+  // 4 路并发拉全部歌单，只留「歌名 + 歌手」建索引，存本机 12 小时
+  function buildIdx(onStep) {
+    var out = {}, bad = 0, done = 0, i = 0, total = LISTS.length;
+    function one() {
+      if (i >= total) return Promise.resolve();
+      var p = LISTS[i++];
+      return pull(p.id).catch(function () { return null; }).then(function (list) {
+        if (Array.isArray(list) && list.length) {
+          out[p.id] = list.map(function (s) { return [s.title || s.name, s.author || s.artist]; });
+        } else { out[p.id] = []; bad++; }
+        done++;
+        if (onStep) onStep(done, total, bad);
+        return one();
+      });
+    }
+    var jobs = [];
+    for (var k = 0; k < 4; k++) jobs.push(one());
+    return Promise.all(jobs).then(function () {
+      var d = { t: Date.now(), l: out, bad: bad };
+      try { lsSet(FIND_KEY, JSON.stringify(d)); } catch (e) {}
+      return d;
+    });
+  }
+
+  // 全部歌单索引里挑最像的（当前这张给一点优先），返回 { pid, name, score }；没有就 null
+  function locate(d, kw) {
+    var order = [sel.value];
+    LISTS.forEach(function (p) { if (p.id !== sel.value) order.push(p.id); });
+    var best = null;
+    for (var i = 0; i < order.length; i++) {
+      var pid = order[i], rows = (d.l && d.l[pid]) || [];
+      for (var j = 0; j < rows.length; j++) {
+        if (!matchSong(kw, rows[j][0], rows[j][1])) continue;
+        var sc = scoreSong(kw, rows[j][0], rows[j][1]) + (pid === sel.value ? 1 : 0);
+        if (!best || sc > best.score) {
+          var meta = LISTS.filter(function (p) { return p.id === pid; })[0];
+          best = { pid: pid, name: meta ? meta.name : pid, score: sc };
+        }
+      }
+    }
+    return best;
+  }
+
+  function playAt(i) {
+    try { ap.list.switch(i); ap.play(); } catch (e) {}
+    setTimeout(function () {
+      try {
+        var ol = document.querySelector("#blog-music-player .aplayer-list ol");
+        var li = ol && ol.children[i];
+        if (li) li.scrollIntoView({ block: "nearest" });
+      } catch (e) {}
+    }, 80);
+  }
+
+  function openPanel() {
+    if (wrap.classList.contains("mp-side")) fromSide();
+    if (!wrap.classList.contains("mp-open")) { wrap.classList.add("mp-open"); toggle.textContent = "▾"; }
+  }
+
+  // 命中歌单里的那首：本张就直接跳；别的先切歌单，载入后再跳
+  function jumpTo(r, kw) {
+    if (r.pid === sel.value) {
+      var m0 = bestOf(ap.list.audios || [], kw);
+      if (m0) {
+        playAt(m0.i);
+        say("当前歌单里就有：" + ap.list.audios[m0.i].name + " - " + ap.list.audios[m0.i].artist);
+        return;
+      }
+    }
+    sel.value = r.pid;
+    say("在「" + r.name + "」里找到了，正在切歌单…");
+    load(r.pid, function () {
+      var m = bestOf(ap.list.audios || [], kw);
+      if (!m) { say("歌单已切到「" + r.name + "」，但这首没找到，请再搜一次"); return; }
+      playAt(m.i);
+      say("已跳到「" + r.name + "」：" + ap.list.audios[m.i].name + " - " + ap.list.audios[m.i].artist);
+    });
+  }
+
+  // 网易云结果里的相关性门槛：关键词（或其每一段）得真出现在歌名/歌手里，
+  // 否则「世界上不存在的歌」这种会被当成搜索结果收下
+  function relevant(kw, name, artist) {
+    var k = norm(kw), n = norm(name), a = norm(artist);
+    if (!k) return false;
+    if (n.indexOf(k) >= 0 || k.indexOf(n) >= 0 || a.indexOf(k) >= 0) return true;
+    var ts = toks(kw), hay = n + a;
+    for (var i = 0; i < ts.length; i++) { if (hay.indexOf(ts[i]) < 0) return false; }
+    return true;
+  }
+
+  // 歌单里都没有 → 网易云搜（主源搜不到就用自建 Worker 再搜一次）
+  function searchNetease(kw) {
+    var q = encodeURIComponent(kw);
+    var u1 = "https://api.qijieya.cn/meting/?server=netease&type=search&br=" + br + "&id=" + q;
+    var u2 = WRITE_BASE + "/?server=netease&type=search&br=" + br + "&id=" + q;
+    function j(u) { return fetch(u).then(function (r) { return r.json(); }); }
+    return j(u1).catch(function () { return j(u2); }).then(function (list) {
+      if (!Array.isArray(list) || !list.length) return null;
+      var best = null, bs = -1;
+      list.forEach(function (s) {
+        var nm = s.title || s.name, ar = s.author || s.artist;
+        if (!relevant(kw, nm, ar)) return;
+        var sc = scoreSong(kw, nm, ar);
+        if (sc > bs) { bs = sc; best = s; }
+      });
+      return best ? { song: mapSong(best), score: bs } : null;
+    });
+  }
+
+  function doFind() {
+    var kw = (findKw.value || "").trim();
+    if (!kw) { say("先输入歌名或歌手"); findKw.focus(); return; }
+    openPanel();
+
+    // 1. 当前歌单里歌名整名对上的 → 直接跳，不联网
+    var ex = bestOf(ap.list.audios || [], kw);
+    if (ex && ex.score >= 100) {
+      playAt(ex.i);
+      say("当前歌单里就有：" + ap.list.audios[ex.i].name + " - " + ap.list.audios[ex.i].artist);
+      return;
+    }
+
+    // 2. 其余情况：歌单索引（没建过就先建）与网易云同时问，谁更贴切用谁。
+    //    同分算歌单赢——歌单里已有的歌不再从网易云加一首重复的。
+    var d = findIdx();
+    say(d ? "搜索中…" : "首次搜歌要建歌单索引，稍等…");
+    var idxP = d ? Promise.resolve(d) : buildIdx(function (n, t) { say("检索歌单 " + n + "/" + t + "…"); });
+
+    Promise.all([idxP, searchNetease(kw).catch(function () { return null; })])
+      .then(function (res) {
+        var loc = locate(res[0], kw), net = res[1];
+        if (loc && (!net || loc.score >= net.score)) { jumpTo(loc, kw); return; }
+        if (net) {
+          ap.list.add([net.song]);
+          added.push({ url: net.song.url, text: net.song.name + (net.song.artist ? " - " + net.song.artist : "") });
+          renderUndo();
+          playAt(ap.list.audios.length - 1);
+          say("网易云搜到，已加进当前歌单：" + net.song.name + " - " + net.song.artist);
+          return;
+        }
+        if (loc) { jumpTo(loc, kw); return; }
+        say("歌单和网易云都没搜到「" + kw + "」");
+      })
+      .catch(function () { say("搜索出错，检查网络后重试"); });
+  }
+
+  document.getElementById("mp-find-btn").addEventListener("click", function () {
+    findRow.hidden = !findRow.hidden;
+    if (!findRow.hidden) { openPanel(); findKw.focus(); }
+  });
+  findBtn.addEventListener("click", doFind);
+  findKw.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.keyCode === 13) { e.preventDefault(); doFind(); }
+  });
 
   window.addEventListener("resize", function () {
     if (wrap.classList.contains("mp-side")) {

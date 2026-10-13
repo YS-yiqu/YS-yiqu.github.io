@@ -52,7 +52,6 @@
     color: #333;
     cursor: pointer;
   }
-  #mp-br { flex: 0 0 auto; width: 64px; }
   #mp-bar button {
     border: 0;
     background: rgba(255, 255, 255, .2);
@@ -68,44 +67,38 @@
   #mp-wrap.mp-open #mp-body { max-height: 460px; }
   #mp-wrap .aplayer { margin: 0; border-radius: 0; box-shadow: none; background: #fff; }
   #mp-wrap .aplayer .aplayer-info { border-bottom: 1px solid #f0f0f0; }
-  #mp-bar #mp-dice, #mp-bar #mp-add { flex: 0 0 auto; }
-  #mp-cfg {
+  #mp-bar #mp-find-btn { flex: 0 0 auto; }
+  /* 搜歌行：先查歌单，再查网易云 */
+  #mp-find {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 4px;
     padding: 6px 8px;
     background: #f4f7fb;
     border-bottom: 1px solid #e6ebf2;
     font-size: 12px;
   }
-  #mp-cfg[hidden] { display: none; }
-  #mp-cfg input {
-    width: 108px;
+  #mp-find[hidden] { display: none; }
+  #mp-find input {
+    flex: 1;
+    min-width: 0;
     border: 1px solid #cfd8e3;
     border-radius: 5px;
     padding: 3px 6px;
     font-size: 12px;
   }
-  #mp-cfg select {
-    max-width: 148px;
-    border: 1px solid #cfd8e3;
-    border-radius: 5px;
-    padding: 3px 4px;
-    font-size: 12px;
-    flex: 1;
-  }
-  #mp-cfg button {
+  #mp-find button {
     border: 0;
     background: #4a90d9;
     color: #fff;
     border-radius: 5px;
-    padding: 3px 7px;
+    padding: 3px 8px;
     font-size: 12px;
+    line-height: 1.2;
     cursor: pointer;
+    flex: 0 0 auto;
   }
   #mp-msg { color: #4a90d9; }
-  #mp-cfg a { color: #4a90d9; font-size: 12px; text-decoration: underline; cursor: pointer; }
   #mp-note {
     display: flex;
     align-items: center;
@@ -118,7 +111,21 @@
     min-height: 18px;
   }
   #mp-note[hidden] { display: none; }
-  #mp-note a { color: #4a90d9; text-decoration: underline; cursor: pointer; }
+
+  /* 撤掉刚搜索加进来的那首（单独一行，不放进 8 秒后会隐藏的提示行） */
+  #mp-undo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    background: #fff7ec;
+    border-bottom: 1px solid #f2e3cd;
+    font-size: 12px;
+    color: #a9661a;
+  }
+  #mp-undo[hidden] { display: none; }
+  #mp-undo a { color: #a9661a; text-decoration: underline; cursor: pointer; }
+  #mp-undo-what { color: #8a7052; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* 贴边收起后的小标签 */
   #mp-tab {
