@@ -15,6 +15,10 @@ paginate = 30
   author = "WenYichao's Blog"
   keywords = ["Blog", "技术博客"]
 
+  # 首页列表、归档、上一篇/下一篇只认 posts；
+  # 不加这行时 Hugo 默认取「文章最多的那个 section」，影音条目攒多了会把首页顶成影音墙
+  mainSections = ["posts"]
+
   # 首页 profile 模式
   profileMode.enabled = false
   profileMode.subtitle = "从零开始的成长记录"
@@ -64,6 +68,12 @@ paginate = 30
     hideCredits = true
 
 [menu]
+  [[menu.main]]
+    identifier = "media"
+    name = "影音"
+    url = "/media/"
+    weight = 5
+
   [[menu.main]]
     identifier = "tags"
     name = "标签"
