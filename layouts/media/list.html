@@ -1,8 +1,9 @@
 {{- define "main" }}
 
 {{- /* 数据来自 assets/movies.csv（照 Shaocheng.Li 的做法：海报墙由一份 CSV 驱动）。
-       列：title,year,rating,rating_source,quote,poster,review,jellyfin_id
-       review 填了且站内有同名影评页，点海报就进影评；没填或没有页面，海报不可点。 */ -}}
+       列：title,year,rating,rating_source,quote,poster,review,douban,jellyfin_id
+       点海报去处：先看 douban（豆瓣条目号或整条链接，新窗口打开）；
+       没填豆瓣再看 review（站内影评页）；两样都没有，海报不可点。 */ -}}
 {{- $films := slice }}
 {{- with resources.Get "movies.csv" }}
   {{- $rows := . | transform.Unmarshal }}
@@ -97,10 +98,15 @@
 {{- else }}
 <div class="mw-grid" id="mw-grid">
   {{- range $f := $films }}
-  {{- $rev := false }}
-  {{- with $f.review }}{{ $rev = site.GetPage (printf "/media/%s" .) }}{{ end }}
+  {{- $href := "" }}
+  {{- with $f.douban }}
+    {{- $href = . }}
+    {{- if not (hasPrefix $href "http") }}{{ $href = printf "https://movie.douban.com/subject/%s/" $href }}{{ end }}
+  {{- else }}
+    {{- with $f.review }}{{ with site.GetPage (printf "/media/%s" .) }}{{ $href = .RelPermalink }}{{ end }}{{ end }}
+  {{- end }}
   <div class="mw-cell">
-    <a class="mw-link"{{ with $rev }} href="{{ .RelPermalink }}"{{ end }}{{ if not $rev }} aria-disabled="true"{{ end }}>
+    <a class="mw-link"{{ with $href }} href="{{ . }}"{{ if hasPrefix . "http" }} target="_blank" rel="noopener"{{ end }}{{ else }} aria-disabled="true"{{ end }}>
       {{- with $f.poster }}
       <img src="{{ . }}" alt="{{ $f.title }} 海报" loading="lazy">
       {{- else }}
