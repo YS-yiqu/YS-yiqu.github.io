@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>影音 on WenYichao's Blog</title><link>https://ys-yiqu.github.io/media/</link><description>Recent content in 影音 on WenYichao's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 15 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://ys-yiqu.github.io/media/index.xml" rel="self" type="application/rss+xml"/><item><title>温暖的抱抱</title><link>https://ys-yiqu.github.io/media/warm-hug/</link><pubDate>Thu, 15 Oct 2026 00:00:00 +0000</pubDate><guid>https://ys-yiqu.github.io/media/warm-hug/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;下面是&lt;strong&gt;占位样文&lt;/strong&gt;，只为把版式撑开看看样子，不是成稿。你的那篇写完发我，我原样替换。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;这一段是影评正文的位置。列表页那一行只显示片名、年份、评分和一句话短评，更长的内容都落在这个详情页里，所以这里写的字数不受限制。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;这一段是影评正文的位置。海报墙上悬停看到的那几项（片名、年份、评分、一句话短评）都在 &lt;code&gt;assets/movies.csv&lt;/code&gt; 里，不在这篇文章里；这里只写正文，写多长都行。&lt;/p&gt;</description></item></channel></rss>
