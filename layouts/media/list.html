@@ -39,10 +39,17 @@
   .mw-cell img { display: block; width: 100%; max-width: 100%; max-height: 24rem; object-fit: cover; margin: 0; }
 
   .mw-noimg {
-    display: flex; align-items: center; justify-content: center;
-    width: 100%; height: 16rem; padding: 10px; text-align: center;
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+    width: 100%; aspect-ratio: 2 / 3; max-height: 24rem;
+    padding: 14px; text-align: left;
     background: var(--code-bg); color: var(--secondary);
-    font-size: 15px; font-weight: 600;
+    border: 1px dashed var(--tertiary); box-sizing: border-box;
+    font-size: 13.5px; font-weight: 600; line-height: 1.55;
+  }
+  .mw-noposter-tag {
+    display: inline-block; margin-bottom: 8px; padding: 1px 6px;
+    border: 1px solid var(--tertiary); border-radius: 4px;
+    font-size: 11px; font-weight: 500; color: var(--secondary);
   }
 
   /* 悬停：整块 90% 黑遮罩，信息居中 */
@@ -107,7 +114,7 @@
       {{- with $f.poster }}
       <img src="{{ . }}" alt="{{ $f.title }} 海报" loading="lazy">
       {{- else }}
-      <span class="mw-noimg">{{ $f.title }}</span>
+      <span class="mw-noimg"><span class="mw-noposter-tag">待刮削</span>{{ $f.title }}</span>
       {{- end }}
       <div class="mw-overlay">
         <p class="mw-title">{{ $f.title }}</p>
