@@ -1,72 +1,80 @@
 {{- define "main" }}
 
-{{- $pages := sort .RegularPages ".Params.year" "desc" }}
-{{- $count := len $pages }}
+{{- /* 数据来自 assets/movies.csv（照 Shaocheng.Li 的做法：海报墙由一份 CSV 驱动）。
+       列：title,year,rating,rating_source,quote,poster,review,jellyfin_id
+       review 填了且站内有同名影评页，点海报就进影评；没填或没有页面，海报不可点。 */ -}}
+{{- $films := slice }}
+{{- with resources.Get "movies.csv" }}
+  {{- $rows := . | transform.Unmarshal }}
+  {{- $head := index $rows 0 }}
+  {{- range $r := after 1 $rows }}
+    {{- $f := dict }}
+    {{- range $i, $k := $head }}
+      {{- if lt $i (len $r) }}{{ $f = merge $f (dict $k (index $r $i)) }}{{ end }}
+    {{- end }}
+    {{- $films = $films | append $f }}
+  {{- end }}
+{{- end }}
+{{- $films = sort $films "year" "desc" }}
+{{- $count := len $films }}
 
 {{- /* 影音板块专用样式：选择器一律 .mw- 前缀，只作用于本页，不碰全站与其它文章 */ -}}
 <style>
   .mw-head { margin-bottom: 6px; }
   .mw-head h1 { margin-bottom: 6px; }
-  .mw-intro { color: var(--secondary); font-size: 14px; line-height: 1.7; margin: 0 0 4px; }
-  .mw-count { color: var(--secondary); font-size: 13px; margin: 10px 0 6px; }
+  .mw-count { color: var(--secondary); font-size: 13px; margin: 10px 0 2px; }
+  .mw-note { color: var(--secondary); font-size: 13px; }
 
-  .mw-list { border-top: 1px solid var(--border); margin-top: 8px; }
-
-  .mw-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 18px;
-    padding: 14px 10px;
-    border-bottom: 1px solid var(--border);
-    text-decoration: none !important;
-    color: inherit;
-    border-radius: 6px;
-    transition: background .15s ease;
-  }
-  .mw-row:hover { background: var(--entry); }
-
-  .mw-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; }
-  .mw-title { font-size: 18px; font-weight: 600; color: var(--primary); line-height: 1.4; }
-  .mw-row:hover .mw-title { color: #4a90d9; }
-  .mw-year { font-size: 13px; color: var(--secondary); font-variant-numeric: tabular-nums; }
-  .mw-orig { font-size: 12px; color: var(--secondary); opacity: .85; }
-
-  .mw-quote {
-    margin-top: 5px;
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--content);
-    opacity: .82;
+  /* 海报墙：四列、换行、格子内边距与下边距照搬参考站 */
+  .mw-grid { display: flex; flex-wrap: wrap; margin: 14px -.5rem 0; }
+  .mw-cell {
+    position: relative;
+    width: 25%;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    margin-bottom: 1rem;
     overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
-  .mw-muted { color: var(--secondary); font-style: normal; }
+  .mw-link { position: relative; display: block; text-decoration: none !important; }
+  .mw-cell img { display: block; width: 100%; max-width: 100%; max-height: 24rem; object-fit: cover; margin: 0; }
 
-  .mw-score { display: flex; flex-direction: column; align-items: flex-end; row-gap: 4px; }
-  .mw-rating {
-    min-width: 46px;
-    text-align: center;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: #fff;
-    background: linear-gradient(135deg, #4a90d9, #ee7b3c);
+  .mw-noimg {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 16rem; padding: 10px; text-align: center;
+    background: var(--code-bg); color: var(--secondary);
+    font-size: 15px; font-weight: 600;
   }
-  .mw-rating-src { font-size: 11px; color: var(--secondary); }
 
-  @media (max-width: 560px) {
-    .mw-row { column-gap: 10px; padding: 13px 2px; }
-    .mw-title { font-size: 17px; }
-    .mw-year { font-size: 12px; }
-    .mw-quote { font-size: 13px; margin-top: 4px; }
-    .mw-rating { min-width: 42px; font-size: 14px; padding: 2px 6px; }
-    .mw-rating-src { font-size: 10px; }
+  /* 悬停：整块 90% 黑遮罩，信息居中 */
+  .mw-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, .9);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 0 .6rem;
+    opacity: 0;
+    transition: opacity .3s ease;
+    overflow: hidden;
+  }
+  .mw-cell:hover .mw-overlay { opacity: 1; }
+  .mw-overlay p { color: #fff; text-align: center; margin: 3px 0; }
+  .mw-title { font-weight: 700; font-size: 16px; line-height: 1.4; }
+  .mw-meta { font-weight: 700; font-size: 14px; }
+  .mw-quote { font-size: 12.5px; font-weight: 400; line-height: 1.6; opacity: .92; }
+
+  /* 一次只上 20 张，点「加载更多」再出 20 张（照搬参考站） */
+  .mw-hide { display: none; }
+  .mw-more-wrap { text-align: center; margin: 6px 0 14px; }
+  .mw-more {
+    background: #007bff; color: #fff; border: 0;
+    padding: .5rem 1rem; border-radius: .25rem; cursor: pointer; font-size: 14px;
+  }
+  .mw-more:hover { background: #0056b3; }
+
+  @media (max-width: 900px) { .mw-cell { width: 33.3333%; } }
+  @media (max-width: 620px) { .mw-cell { width: 50%; } .mw-overlay p { font-size: 13px; } }
+  /* 触屏没有悬停：按住（点）格子时出遮罩 */
+  @media (hover: none) {
+    .mw-cell:active .mw-overlay, .mw-cell:focus-within .mw-overlay { opacity: 1; }
   }
 </style>
 
@@ -85,32 +93,51 @@
 <p class="mw-count">共 {{ $count }} 部</p>
 
 {{- if eq $count 0 }}
-<p class="mw-intro">这里还没有条目。</p>
+<p class="mw-note">片单是空的：往 assets/movies.csv 里加一行就多一张海报。</p>
 {{- else }}
-<div class="mw-list">
-  {{- range $pages }}
-  <a class="mw-row" href="{{ .Permalink }}" aria-label="影评：{{ .Title }}">
-    <div>
-      <div class="mw-line">
-        <span class="mw-title">{{ .Title }}</span>
-        {{- with .Params.year }}<span class="mw-year">{{ . }}</span>{{ end }}
-        {{- with .Params.original_title }}<span class="mw-orig">{{ . }}</span>{{ end }}
-      </div>
-      <div class="mw-quote">
-        {{- with .Params.quote }}{{ . }}{{ else }}<span class="mw-muted">还没有一句话短评</span>{{ end }}
-      </div>
-    </div>
-    <div class="mw-score">
-      {{- if isset .Params "rating" }}
-      <span class="mw-rating">{{ printf "%.1f" .Params.rating }}</span>
+<div class="mw-grid" id="mw-grid">
+  {{- range $f := $films }}
+  {{- $rev := false }}
+  {{- with $f.review }}{{ $rev = site.GetPage (printf "/media/%s" .) }}{{ end }}
+  <div class="mw-cell">
+    <a class="mw-link"{{ with $rev }} href="{{ .RelPermalink }}"{{ end }}{{ if not $rev }} aria-disabled="true"{{ end }}>
+      {{- with $f.poster }}
+      <img src="{{ . }}" alt="{{ $f.title }} 海报" loading="lazy">
       {{- else }}
-      <span class="mw-rating" style="background: var(--tertiary)">—</span>
+      <span class="mw-noimg">{{ $f.title }}</span>
       {{- end }}
-      {{- with .Params.rating_source }}<span class="mw-rating-src">{{ . }}</span>{{ end }}
-    </div>
-  </a>
+      <div class="mw-overlay">
+        <p class="mw-title">{{ $f.title }}</p>
+        <p class="mw-meta">{{ $f.year }}{{ with $f.rating }} · {{ . }}分{{ end }}{{ with $f.rating_source }}（{{ . }}）{{ end }}</p>
+        {{- with $f.quote }}<p class="mw-quote">{{ . }}</p>{{ end }}
+      </div>
+    </a>
+  </div>
   {{- end }}
 </div>
+<div class="mw-more-wrap"><button class="mw-more" id="mw-more" type="button" style="display:none">加载更多</button></div>
+
+<script>
+  (function () {
+    var grid = document.getElementById('mw-grid');
+    var btn = document.getElementById('mw-more');
+    if (!grid || !btn || grid.dataset.mwReady) return;
+    grid.dataset.mwReady = '1';
+    var cells = grid.querySelectorAll('.mw-cell');
+    var step = 20, shown = cells.length;
+    if (cells.length > step) {
+      for (var i = step; i < cells.length; i++) cells[i].classList.add('mw-hide');
+      shown = step;
+      btn.style.display = 'inline-block';
+    }
+    btn.onclick = function () {
+      var end = Math.min(shown + step, cells.length);
+      for (var i = shown; i < end; i++) cells[i].classList.remove('mw-hide');
+      shown = end;
+      if (shown >= cells.length) btn.style.display = 'none';
+    };
+  })();
+</script>
 {{- end }}
 
 {{- end }}{{/* end main */}}
