@@ -35,8 +35,9 @@
     margin-bottom: 1rem;
     overflow: hidden;
   }
-  .mw-link { position: relative; display: block; text-decoration: none !important; }
-  .mw-cell img { display: block; width: 100%; max-width: 100%; max-height: 24rem; object-fit: cover; margin: 0; }
+  /* 卡面锁死 2:3，图按 cover 填满：不管原图是 1:1.33 还是 1:1.5，格子都一样高（2026-10-16 修） */
+  .mw-link { position: relative; display: block; text-decoration: none !important; aspect-ratio: 2 / 3; max-height: 24rem; overflow: hidden; }
+  .mw-cell img { display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; margin: 0; }
 
   .mw-noimg {
     display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
