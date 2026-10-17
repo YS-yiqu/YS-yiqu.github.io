@@ -16,7 +16,19 @@
   {{- end }}
 {{- end }}
 {{- $films = sort $films "year" "desc" }}
-{{- $count := len $films }}
+{{- /* 这个墙是「看片记录」：只显示 watched 列填了年份的条目，按观看年份分栏，新的在上 */ -}}
+{{- $watched := slice }}
+{{- $years := slice }}
+{{- range $f := $films }}
+  {{- with $f.watched }}
+    {{- $watched = $watched | append $f }}
+    {{- $years = $years | append (string .) }}
+  {{- end }}
+{{- end }}
+{{- $count := len $watched }}
+{{- $yearGroups := slice }}
+{{- range ($years | uniq) }}{{ $yearGroups = $yearGroups | append (dict "y" .) }}{{ end }}
+{{- $yearGroups = sort $yearGroups "y" "desc" }}
 
 {{- /* 影音板块专用样式：选择器一律 .mw- 前缀，只作用于本页，不碰全站与其它文章 */ -}}
 <style>
@@ -67,7 +79,16 @@
   .mw-overlay p { color: #fff; text-align: center; margin: 3px 0; }
   .mw-title { font-weight: 700; font-size: 16px; line-height: 1.4; }
   .mw-meta { font-weight: 700; font-size: 14px; }
-  .mw-quote { font-size: 12.5px; font-weight: 400; line-height: 1.6; opacity: .92; }
+  .mw-quote { font-size: 12.5px; font-weight: 400; line-height: 1.6; opacity: .92; white-space: pre-line; }
+
+  /* 年份分隔栏：左边「2026 观看」，右边部数，下面一条细线 */
+  .mw-year {
+    display: flex; align-items: baseline; justify-content: space-between; gap: .6rem;
+    margin: 1.7rem 0 .1rem; padding: 0 .5rem .45rem;
+    border-bottom: 1px solid var(--tertiary);
+    font-size: 17px; font-weight: 700; letter-spacing: .02em;
+  }
+  .mw-year-n { font-size: 12.5px; font-weight: 400; color: var(--secondary); }
 
   /* 一次只上 20 张，点「加载更多」再出 20 张（照搬参考站） */
   .mw-hide { display: none; }
@@ -98,13 +119,17 @@
 <div class="post-content md-content">{{ .Content }}</div>
 {{- end }}
 
-<p class="mw-count">共 {{ $count }} 部</p>
+<p class="mw-count">共 {{ $count }} 部 · 按观看年份分栏</p>
 
 {{- if eq $count 0 }}
-<p class="mw-note">片单是空的：往 assets/movies.csv 里加一行就多一张海报。</p>
+<p class="mw-note">还没有看片记录：在 assets/movies.csv 里给看过的那一行的 watched 列填上年份，这里就会出现。</p>
 {{- else }}
-<div class="mw-grid" id="mw-grid">
-  {{- range $f := $films }}
+{{- range $yearGroups }}
+{{- $y := .y }}
+{{- $group := where $watched "watched" $y }}
+<h2 class="mw-year"><span>{{ $y }} 观看</span><span class="mw-year-n">{{ len $group }} 部</span></h2>
+<div class="mw-grid">
+  {{- range $f := $group }}
   {{- $href := "" }}
   {{- with $f.douban }}
     {{- $href = . }}
@@ -126,29 +151,7 @@
   </div>
   {{- end }}
 </div>
-<div class="mw-more-wrap"><button class="mw-more" id="mw-more" type="button" style="display:none">加载更多</button></div>
-
-<script>
-  (function () {
-    var grid = document.getElementById('mw-grid');
-    var btn = document.getElementById('mw-more');
-    if (!grid || !btn || grid.dataset.mwReady) return;
-    grid.dataset.mwReady = '1';
-    var cells = grid.querySelectorAll('.mw-cell');
-    var step = 20, shown = cells.length;
-    if (cells.length > step) {
-      for (var i = step; i < cells.length; i++) cells[i].classList.add('mw-hide');
-      shown = step;
-      btn.style.display = 'inline-block';
-    }
-    btn.onclick = function () {
-      var end = Math.min(shown + step, cells.length);
-      for (var i = shown; i < end; i++) cells[i].classList.remove('mw-hide');
-      shown = end;
-      if (shown >= cells.length) btn.style.display = 'none';
-    };
-  })();
-</script>
+{{- end }}
 {{- end }}
 
 {{- end }}{{/* end main */}}
