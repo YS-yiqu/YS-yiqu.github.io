@@ -15,23 +15,32 @@ description: "许嵩 2018 年专辑，豆瓣 8.8 分。"
 weight: 3
 tracks:
   - title: "老古董"
-    duration: ""
+    duration: "4:04"
+    netease_id: 557584658
   - title: "大千世界"
-    duration: ""
+    duration: "4:15"
+    netease_id: 569213279
   - title: "艺术家们"
-    duration: ""
+    duration: "3:34"
+    netease_id: 865460477
   - title: "九月清晨"
-    duration: ""
+    duration: "3:56"
+    netease_id: 865460478
   - title: "浪"
-    duration: ""
+    duration: "3:39"
+    netease_id: 865460479
   - title: "重复重复"
-    duration: ""
+    duration: "5:56"
+    netease_id: 865460480
   - title: "明智之举"
-    duration: ""
+    duration: "4:27"
+    netease_id: 862099032
   - title: "如约而至"
-    duration: ""
+    duration: "4:16"
+    netease_id: 573384240
   - title: "柳成荫"
-    duration: ""
+    duration: "8:02"
+    netease_id: 865460483
 ---
 
 <p>2018年许嵩最新作品《寻宝游戏》，许嵩第7张词曲全创作专辑。</p>

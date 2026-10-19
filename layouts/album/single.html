@@ -39,6 +39,17 @@
   .aw-btn-ghost { background: transparent; color: #2d8cf0 !important; border: 1px solid #b9d8f7; }
   .aw-btn-ghost:hover { background: #f1f8ff; }
 
+  /* 最右边的「播放专辑」：点击后把这张专辑临时塞进底部播放器 */
+  .aw-btn-play {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+    background: linear-gradient(135deg, #2d8cf0 0%, #55b8f5 100%);
+    border: 0; cursor: pointer; font-family: inherit; font-weight: 600;
+    padding: 8px 18px;
+    box-shadow: 0 4px 12px rgba(45, 140, 240, .28);
+  }
+  .aw-btn-play:hover { background: linear-gradient(135deg, #1a73d1 0%, #3aa4e8 100%); }
+  .aw-btn-play svg { width: 15px; height: 15px; display: block; }
+
   .aw-tracks { margin: 8px 0 28px; }
   .aw-tracks-head { display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--tertiary); padding-bottom: 8px; }
   .aw-tracks-head h2 { font-size: 18px; margin: 0; }
@@ -71,6 +82,7 @@
     .aw-hero { grid-template-columns: 1fr; gap: 18px; }
     .aw-hero-cover { width: 200px; }
     .aw-title { font-size: 24px; }
+    .aw-btn-play { margin-left: 0; width: 100%; justify-content: center; }
   }
 </style>
 
@@ -99,6 +111,12 @@
       <div class="aw-actions">
         <a class="aw-btn" href="{{ .Params.netease }}" target="_blank" rel="noopener">在网易云听</a>
         <a class="aw-btn aw-btn-ghost" href="{{ .Params.douban }}" target="_blank" rel="noopener">豆瓣条目</a>
+        {{- if $tracks }}
+        <button id="aw-play-album" class="aw-btn aw-btn-play" type="button" aria-label="播放整张专辑">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <span>播放专辑</span>
+        </button>
+        {{- end }}
       </div>
     </div>
   </div>
@@ -127,5 +145,34 @@
 
   <p class="aw-copy">评分与介绍来自豆瓣音乐，封面取自网易云音乐。</p>
 </article>
+
+{{- if $tracks }}
+{{- $trackData := slice -}}
+{{- range $tracks -}}
+  {{- $trackData = $trackData | append (dict "title" .title "netease_id" .netease_id "duration" .duration) -}}
+{{- end -}}
+{{- $coverURL := "" -}}
+{{- with $cover }}{{ $coverURL = .RelPermalink }}{{ end -}}
+{{- $albumData := dict "title" .Title "artist" .Params.artist "cover" $coverURL "tracks" $trackData -}}
+<script type="application/json" id="aw-album-data">{{ $albumData | jsonify | safeJS }}</script>
+<script>
+(function () {
+  var btn = document.getElementById("aw-play-album");
+  var dataEl = document.getElementById("aw-album-data");
+  if (!btn || !dataEl || btn.getAttribute("data-bound") === "1") return;
+  btn.setAttribute("data-bound", "1");
+  btn.addEventListener("click", function () {
+    var album;
+    try { album = JSON.parse(dataEl.textContent); } catch (e) { return; }
+    if (typeof window.mpPlayAlbum === "function") {
+      window.mpPlayAlbum(album);
+    } else {
+      window.__mpPendingAlbum = album;
+    }
+    btn.blur();
+  });
+})();
+</script>
+{{- end }}
 
 {{- end }}{{/* end main */}}

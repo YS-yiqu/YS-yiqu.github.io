@@ -15,23 +15,32 @@ description: "许嵩 2026 年专辑，豆瓣 7.6 分。"
 weight: 2
 tracks:
   - title: "粗糙"
-    duration: ""
+    duration: "4:07"
+    netease_id: 3394038575
   - title: "洛阳纸"
-    duration: ""
+    duration: "4:55"
+    netease_id: 3394036706
   - title: "前程似锦"
-    duration: ""
+    duration: "4:22"
+    netease_id: 3394036707
   - title: "老歌"
-    duration: ""
+    duration: "3:45"
+    netease_id: 3394312467
   - title: "皮下"
-    duration: ""
+    duration: "4:00"
+    netease_id: 3394311562
   - title: "心安之地"
-    duration: ""
+    duration: "4:22"
+    netease_id: 3394312558
   - title: "一见如故"
-    duration: ""
+    duration: "4:22"
+    netease_id: 3394311636
   - title: "出雨林记"
-    duration: ""
+    duration: "4:34"
+    netease_id: 3394311662
   - title: "忽略不计"
-    duration: ""
+    duration: "4:32"
+    netease_id: 3394311677
 ---
 
 <p>许嵩 第九张个人创作专辑 “安泊猜想”</p>

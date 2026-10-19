@@ -15,25 +15,35 @@ description: "许嵩 2011 年专辑，豆瓣 9.4 分。"
 weight: 7
 tracks:
   - title: "想象之中"
-    duration: ""
+    duration: "4:07"
+    netease_id: 167705
   - title: "河山大好"
-    duration: ""
+    duration: "3:16"
+    netease_id: 167709
   - title: "拆东墙"
-    duration: ""
+    duration: "4:18"
+    netease_id: 167712
   - title: "医生"
-    duration: ""
+    duration: "4:03"
+    netease_id: 167715
   - title: "微博控"
-    duration: ""
+    duration: "3:40"
+    netease_id: 167717
   - title: "毁人不倦"
-    duration: ""
+    duration: "3:15"
+    netease_id: 167720
   - title: "双人旁"
-    duration: ""
+    duration: "3:50"
+    netease_id: 167723
   - title: "降温"
-    duration: ""
+    duration: "3:50"
+    netease_id: 167727
   - title: "敬酒不吃"
-    duration: ""
+    duration: "5:05"
+    netease_id: 167730
   - title: "千百度"
-    duration: ""
+    duration: "3:46"
+    netease_id: 167732
 ---
 
 <p>他与世界相遇 他自与世界相蚀</p>

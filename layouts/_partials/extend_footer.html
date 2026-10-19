@@ -50,6 +50,11 @@
   if (window.__mpBooted) return;
   window.__mpBooted = true;
 
+  // 专辑页「播放专辑」：播放器还没起来时先记住，boot 完成后再放
+  if (typeof window.mpPlayAlbum !== "function") {
+    window.mpPlayAlbum = function (album) { window.__mpPendingAlbum = album; };
+  }
+
   function boot() {
   // 主源：公开 Meting 实例（会员歌也能取到整曲）；备源：自建 Worker（主源拿不到时兜底）
   var API = "https://api.qijieya.cn/meting/?server=netease&type=playlist&id=";
@@ -92,6 +97,9 @@
 
   // 搜歌加进来的曲目（只活在当前页面里，切歌单/刷新就回原样），撤掉入口据此显示
   var added = [];
+  // 专辑页临时歌单：当前专辑 + 列表代次（防止旧的歌单请求把专辑列表覆盖掉）
+  var currentAlbum = null;
+  var listGen = 0;
 
   // ---------- 歌单切换 ----------
   var sel = document.getElementById("mp-sel");
@@ -147,8 +155,10 @@
   }
 
   function load(id, onDone) {
+    var gen = ++listGen;
     pull(id)
       .then(function (list) {
+        if (gen !== listGen) return;
         if (!Array.isArray(list) || !list.length) return;
         ap.list.clear();
         ap.list.add(list.map(mapSong));
@@ -157,6 +167,42 @@
         if (onDone) onDone();
       })
       .catch(function () {});
+  }
+
+  // 专辑页「播放专辑」：把这张专辑临时塞进播放器，不改动已有歌单
+  function loadAlbum(album) {
+    if (!album || !album.tracks || !album.tracks.length) return;
+    var songs = [];
+    for (var i = 0; i < album.tracks.length; i++) {
+      var t = album.tracks[i] || {};
+      var nid = t.netease_id || t.id;
+      if (!nid) continue;
+      songs.push(mapSong({
+        title: t.title || t.name,
+        author: album.artist,
+        url: URL_API + "netease&type=url&id=" + nid + "&br=" + br,
+        pic: album.cover,
+        lrc: URL_API + "netease&type=lrc&id=" + nid
+      }));
+    }
+    if (!songs.length) { say("这张专辑没有可播放的曲目"); return; }
+    ++listGen;
+    currentAlbum = album;
+    ap.list.clear();
+    ap.list.add(songs);
+    var opt = document.getElementById("mp-album-opt");
+    if (!opt) {
+      opt = document.createElement("option");
+      opt.id = "mp-album-opt";
+      sel.insertBefore(opt, sel.firstChild);
+    }
+    opt.value = "__album__";
+    opt.textContent = "专辑：" + (album.title || "");
+    sel.value = "__album__";
+    clearAdded();
+    openPanel();
+    playAt(0);
+    say("已切到专辑《" + (album.title || "") + "》，共 " + songs.length + " 首");
   }
 
   // ---------- 上一首 / 下一首 ----------
@@ -200,7 +246,13 @@
   var start = lsGet("mp-list");
   if (!LISTS.some(function (p) { return p.id === start; })) start = LISTS[0].id;
   sel.value = start;
-  sel.addEventListener("change", function () { load(sel.value); });
+  sel.addEventListener("change", function () {
+    if (sel.value === "__album__") {
+      if (currentAlbum) loadAlbum(currentAlbum);
+      return;
+    }
+    load(sel.value);
+  });
   load(start);
 
   // ---------- 提示行 ----------
@@ -595,6 +647,14 @@
   var side = lsGet("mp-side");
   if (side === "left" || side === "right") {
     showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
+  }
+
+  // 专辑页「播放专辑」入口：boot 完成后替换掉占位函数
+  window.mpPlayAlbum = function (album) { loadAlbum(album); };
+  if (window.__mpPendingAlbum) {
+    var pendingAlbum = window.__mpPendingAlbum;
+    window.__mpPendingAlbum = null;
+    loadAlbum(pendingAlbum);
   }
   }
 

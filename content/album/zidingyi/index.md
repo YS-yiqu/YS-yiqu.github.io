@@ -15,23 +15,32 @@ description: "许嵩 2009 年专辑，豆瓣 8.8 分。"
 weight: 9
 tracks:
   - title: "有何不可"
-    duration: ""
+    duration: "4:02"
+    netease_id: 167876
   - title: "如果当时"
-    duration: ""
+    duration: "5:16"
+    netease_id: 167870
   - title: "多余的解释"
-    duration: ""
+    duration: "4:37"
+    netease_id: 167873
   - title: "认错"
-    duration: ""
+    duration: "4:36"
+    netease_id: 167888
   - title: "坏孩子"
-    duration: ""
+    duration: "4:06"
+    netease_id: 167879
   - title: "内线"
-    duration: ""
+    duration: "4:07"
+    netease_id: 167891
   - title: "星座书上"
-    duration: ""
+    duration: "3:59"
+    netease_id: 167894
   - title: "清明雨上"
-    duration: ""
+    duration: "3:40"
+    netease_id: 167882
   - title: "城府"
-    duration: ""
+    duration: "3:19"
+    netease_id: 167885
 ---
 
 <p>Vae（许嵩）首张独立创制专辑《自定义》，1月10日正式发行。近年来在网络上凭借多首原创作品及独特个人气质一直人气高涨的Vae，包揽了《自定义》的作词、作曲、编曲、演奏、制作乃至录音、混音等一切工作。12月11-21日，在其官方网站十日预售量即突破一万张，可谓树立了独立音乐人的人气典范。</p>

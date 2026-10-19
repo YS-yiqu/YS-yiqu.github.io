@@ -15,17 +15,23 @@ description: "花粥 2012 年专辑，豆瓣 7.7 分。"
 weight: 11
 tracks:
   - title: "在路上"
-    duration: ""
+    duration: "2:14"
+    netease_id: 247162
   - title: "我们总是在寻找"
-    duration: ""
+    duration: "2:13"
+    netease_id: 247165
   - title: "少年你在哪里"
-    duration: ""
+    duration: "3:12"
+    netease_id: 247166
   - title: "妈妈我要出嫁"
-    duration: ""
+    duration: "2:04"
+    netease_id: 247169
   - title: "远在北方孤独的鬼"
-    duration: ""
+    duration: "2:27"
+    netease_id: 247177
   - title: "二十岁的某一天"
-    duration: ""
+    duration: "2:26"
+    netease_id: 247172
 ---
 
 <p>2012年春夏创作，在大学宿舍里录制的demo。2012年春夏创作，在大学宿舍里录制的demo。2012年春夏创作，在大学宿舍里录制的demo。2012年春夏创作，在大学宿舍里录制的demo。</p>

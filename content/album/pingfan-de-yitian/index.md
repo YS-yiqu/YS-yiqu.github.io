@@ -15,29 +15,41 @@ description: "毛不易 2018 年专辑，豆瓣 8.6 分。"
 weight: 10
 tracks:
   - title: "平凡的一天"
-    duration: ""
+    duration: "4:37"
+    netease_id: 569214247
   - title: "给你给我"
-    duration: ""
+    duration: "4:01"
+    netease_id: 569200210
   - title: "像我这样的人"
-    duration: ""
+    duration: "3:27"
+    netease_id: 569213220
   - title: "借"
-    duration: ""
+    duration: "4:03"
+    netease_id: 569214250
   - title: "一荤一素"
-    duration: ""
+    duration: "4:41"
+    netease_id: 569200212
   - title: "消愁"
-    duration: ""
+    duration: "4:21"
+    netease_id: 569200213
   - title: "盛夏"
-    duration: ""
+    duration: "4:34"
+    netease_id: 569212211
   - title: "想你想你"
-    duration: ""
+    duration: "3:11"
+    netease_id: 569212210
   - title: "南一道街"
-    duration: ""
+    duration: "4:02"
+    netease_id: 569214249
   - title: "芬芳一生"
-    duration: ""
+    duration: "4:05"
+    netease_id: 569214251
   - title: "如果有一天我变得很有钱"
-    duration: ""
+    duration: "2:51"
+    netease_id: 569214252
   - title: "哎哟"
-    duration: ""
+    duration: "3:34"
+    netease_id: 569200211
 ---
 
 <p>冷暖人间 为平凡发声 赤子之心 无限创作力</p>

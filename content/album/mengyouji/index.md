@@ -15,25 +15,35 @@ description: "许嵩 2012 年专辑，豆瓣 8.2 分。"
 weight: 6
 tracks:
   - title: "胡萝卜须"
-    duration: ""
+    duration: "3:51"
+    netease_id: 167651
   - title: "幻听"
-    duration: ""
+    duration: "4:33"
+    netease_id: 167655
   - title: "对话老师"
-    duration: ""
+    duration: "4:11"
+    netease_id: 167659
   - title: "伴虎"
-    duration: ""
+    duration: "4:31"
+    netease_id: 167663
   - title: "闺蜜"
-    duration: ""
+    duration: "4:10"
+    netease_id: 167666
   - title: "装糊涂"
-    duration: ""
+    duration: "4:12"
+    netease_id: 167669
   - title: "Play With Style"
-    duration: ""
+    duration: "2:55"
+    netease_id: 167672
   - title: "心疼你的过去"
-    duration: ""
+    duration: "4:37"
+    netease_id: 167676
   - title: "全球变冷"
-    duration: ""
+    duration: "4:12"
+    netease_id: 167679
   - title: "亲情式的爱情"
-    duration: ""
+    duration: "4:45"
+    netease_id: 167680
 ---
 
 <p>这城市</p>

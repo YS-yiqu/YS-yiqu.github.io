@@ -15,23 +15,32 @@ description: "许嵩 2014 年专辑，豆瓣 8.6 分。"
 weight: 5
 tracks:
   - title: "山水之间"
-    duration: ""
+    duration: "4:36"
+    netease_id: 28802028
   - title: "弹指一挥间"
-    duration: ""
+    duration: "4:48"
+    netease_id: 28952258
   - title: "宇宙之大"
-    duration: ""
+    duration: "4:34"
+    netease_id: 28987655
   - title: "隐隐约约"
-    duration: ""
+    duration: "3:23"
+    netease_id: 28987654
   - title: "惊鸿一面"
-    duration: ""
+    duration: "4:16"
+    netease_id: 28854182
   - title: "七夕"
-    duration: ""
+    duration: "3:54"
+    netease_id: 28953350
   - title: "等到烟火清凉"
-    duration: ""
+    duration: "3:01"
+    netease_id: 28987652
   - title: "梧桐灯"
-    duration: ""
+    duration: "4:37"
+    netease_id: 28987656
   - title: "有桃花"
-    duration: ""
+    duration: "4:02"
+    netease_id: 28987653
 ---
 
 <p>创作背景</p>

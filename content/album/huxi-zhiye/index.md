@@ -15,25 +15,35 @@ description: "许嵩 2021 年专辑，豆瓣 8.6 分。"
 weight: 1
 tracks:
   - title: "乌鸦"
-    duration: ""
+    duration: "5:29"
+    netease_id: 1842784921
   - title: "假摔"
-    duration: ""
+    duration: "4:19"
+    netease_id: 1842801269
   - title: "科幻"
-    duration: ""
+    duration: "4:07"
+    netease_id: 1842801328
   - title: "万古"
-    duration: ""
+    duration: "5:14"
+    netease_id: 1842802095
   - title: "冰柜"
-    duration: ""
+    duration: "3:13"
+    netease_id: 1842801466
   - title: "超市"
-    duration: ""
+    duration: "4:20"
+    netease_id: 1842802179
   - title: "隔代"
-    duration: ""
+    duration: "5:22"
+    netease_id: 1842801494
   - title: "野人"
-    duration: ""
+    duration: "4:04"
+    netease_id: 1842801496
   - title: "三尺"
-    duration: ""
+    duration: "3:49"
+    netease_id: 1842801513
   - title: "庞贝"
-    duration: ""
+    duration: "4:16"
+    netease_id: 1842802205
 ---
 
 <p>2021许嵩最新作品《呼吸之野》，许嵩第8张词曲全创作专辑。</p>

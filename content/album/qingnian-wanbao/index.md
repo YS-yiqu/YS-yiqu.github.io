@@ -15,23 +15,32 @@ description: "许嵩 2016 年专辑，豆瓣 9.1 分。"
 weight: 4
 tracks:
   - title: "奇谈"
-    duration: ""
+    duration: "3:53"
+    netease_id: 418602450
   - title: "雅俗共赏"
-    duration: ""
+    duration: "4:10"
+    netease_id: 411214279
   - title: "最佳歌手"
-    duration: ""
+    duration: "4:28"
+    netease_id: 412902950
   - title: "幻胖"
-    duration: ""
+    duration: "4:02"
+    netease_id: 418602451
   - title: "摄影艺术"
-    duration: ""
+    duration: "4:27"
+    netease_id: 415792563
   - title: "平行宇宙"
-    duration: ""
+    duration: "3:29"
+    netease_id: 418603441
   - title: "燕归巢"
-    duration: ""
+    duration: "4:55"
+    netease_id: 402073807
   - title: "摆脱"
-    duration: ""
+    duration: "3:39"
+    netease_id: 418602453
   - title: "早睡身体好"
-    duration: ""
+    duration: "4:39"
+    netease_id: 418603442
 ---
 
 <p>◆2016年许嵩新作品《青年晚报》，许嵩第6张词曲全创作专辑。</p>
