@@ -1,0 +1,131 @@
+{{- define "main" -}}
+
+{{- /* 专辑详情：封面 + 基本信息 + 豆瓣式评分 + 曲目表 + 可折叠的专辑介绍。
+       样式选择器一律 .aw- 前缀，只作用于本页。 */ -}}
+
+{{- $cover := .Resources.GetMatch "cover.*" -}}
+{{- $tracks := .Params.tracks -}}
+
+<style>
+  .aw-detail { max-width: 860px; margin: 0 auto; }
+  .aw-back { display: inline-block; font-size: 13px; color: var(--secondary); text-decoration: none !important; margin-bottom: 18px; }
+  .aw-back:hover { color: #2d8cf0; }
+
+  .aw-hero { display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: start; margin-bottom: 34px; }
+  .aw-hero-cover {
+    width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden;
+    background: var(--code-bg); box-shadow: 0 12px 30px rgba(0, 0, 0, .16);
+  }
+  .aw-hero-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .aw-title { font-size: 30px; line-height: 1.25; margin: 0 0 6px; color: var(--primary); }
+  .aw-artist { font-size: 16px; font-weight: 600; color: #2d8cf0; margin: 0 0 8px; }
+  .aw-meta-line { font-size: 13px; color: var(--secondary); margin: 0; }
+
+  .aw-rating-box {
+    display: flex; align-items: center; gap: 14px;
+    margin: 18px 0 0; padding: 12px 16px;
+    background: var(--code-bg); border-radius: 8px;
+  }
+  .aw-big-score { font-size: 30px; font-weight: 700; color: #e8850c; line-height: 1; }
+  .aw-rating-count { font-size: 12px; color: var(--secondary); margin-top: 4px; }
+
+  .aw-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .aw-btn {
+    display: inline-block; padding: 7px 16px; border-radius: 6px;
+    background: #2d8cf0; color: #fff !important;
+    font-size: 13px; text-decoration: none !important; line-height: 1.5;
+  }
+  .aw-btn:hover { background: #1a73d1; }
+  .aw-btn-ghost { background: transparent; color: #2d8cf0 !important; border: 1px solid #b9d8f7; }
+  .aw-btn-ghost:hover { background: #f1f8ff; }
+
+  .aw-tracks { margin: 8px 0 28px; }
+  .aw-tracks-head { display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--tertiary); padding-bottom: 8px; }
+  .aw-tracks-head h2 { font-size: 18px; margin: 0; }
+  .aw-tracks-head span { font-size: 12px; color: var(--secondary); }
+  .aw-tracks ol { list-style: none; padding: 0; margin: 0; }
+  .aw-tracks li {
+    display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 10px;
+    align-items: baseline; padding: 9px 4px;
+    border-bottom: 1px solid var(--tertiary);
+  }
+  .aw-tracks li:hover { background: var(--code-bg); }
+  .aw-no { font-family: Consolas, 'Courier New', monospace; font-size: 12.5px; color: var(--secondary); }
+  .aw-tname { font-size: 14.5px; color: var(--primary); }
+  .aw-dur { font-family: Consolas, 'Courier New', monospace; font-size: 12px; color: var(--secondary); }
+
+  .aw-intro { margin: 10px 0 18px; border: 1px solid var(--tertiary); border-radius: 8px; padding: 10px 16px; }
+  .aw-intro summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2d8cf0; }
+  .aw-intro-body { margin-top: 12px; font-size: 14px; line-height: 1.85; color: var(--primary); }
+  .aw-intro-body p { margin: 0 0 10px; }
+
+  .aw-copy { font-size: 12px; color: var(--secondary); margin-top: 18px; }
+
+  /* 豆瓣式五星：底星灰、亮星按百分比裁切 */
+  .aw-stars { position: relative; display: inline-block; line-height: 1; font-size: 12px; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
+  .aw-stars-bg { color: var(--tertiary); }
+  .aw-stars-fg { position: absolute; left: 0; top: 0; width: var(--pct); overflow: hidden; color: #f5a623; white-space: nowrap; }
+  .aw-stars-lg { font-size: 20px; letter-spacing: 2px; }
+
+  @media (max-width: 720px) {
+    .aw-hero { grid-template-columns: 1fr; gap: 18px; }
+    .aw-hero-cover { width: 200px; }
+    .aw-title { font-size: 24px; }
+  }
+</style>
+
+<article class="aw-detail">
+  <a class="aw-back" href="{{ .Parent.RelPermalink }}">← 专辑墙</a>
+
+  <div class="aw-hero">
+    <div class="aw-hero-cover">
+      {{- with $cover }}
+      <img src="{{ .RelPermalink }}" alt="{{ $.Title }} 封面">
+      {{- end }}
+    </div>
+    <div class="aw-hero-info">
+      <h1 class="aw-title">{{ .Title }}</h1>
+      <p class="aw-artist">{{ .Params.artist }}</p>
+      <p class="aw-meta-line">{{ .Params.release_date }}{{ with .Params.label }} · {{ . }}{{ end }}{{ with .Params.genre }} · {{ . }}{{ end }}</p>
+
+      <div class="aw-rating-box">
+        <div class="aw-big-score">{{ .Params.rating }}</div>
+        <div>
+          {{ partial "rating-stars.html" (dict "rating" .Params.rating "class" "aw-stars aw-stars-lg") }}
+          <div class="aw-rating-count">{{ .Params.rating_count }} 人评分 · {{ .Params.rating_source }}</div>
+        </div>
+      </div>
+
+      <div class="aw-actions">
+        <a class="aw-btn" href="{{ .Params.netease }}" target="_blank" rel="noopener">在网易云听</a>
+        <a class="aw-btn aw-btn-ghost" href="{{ .Params.douban }}" target="_blank" rel="noopener">豆瓣条目</a>
+      </div>
+    </div>
+  </div>
+
+  {{- with $tracks }}
+  <section class="aw-tracks">
+    <div class="aw-tracks-head"><h2>曲目</h2><span>{{ len . }} 首</span></div>
+    <ol>
+      {{- range $i, $t := . }}
+      <li>
+        <span class="aw-no">{{ printf "%02d" (add $i 1) }}</span>
+        <span class="aw-tname">{{ $t.title }}</span>
+        <span class="aw-dur">{{ $t.duration }}</span>
+      </li>
+      {{- end }}
+    </ol>
+  </section>
+  {{- end }}
+
+  {{- with .Content }}
+  <details class="aw-intro">
+    <summary>专辑介绍</summary>
+    <div class="aw-intro-body">{{ . }}</div>
+  </details>
+  {{- end }}
+
+  <p class="aw-copy">评分与介绍来自豆瓣音乐，封面取自网易云音乐。</p>
+</article>
+
+{{- end }}{{/* end main */}}

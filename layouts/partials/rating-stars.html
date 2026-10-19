@@ -1,0 +1,13 @@
+{{- /* 豆瓣式星级：5 颗星，按 10 分制换算，四舍五入到半颗。传入 dict: rating / class */ -}}
+{{- $rating := .rating -}}
+{{- $class := .class | default "aw-stars" -}}
+{{- $pct := 0 -}}
+{{- with $rating -}}
+  {{- $r := cast.ToFloat . -}}
+  {{- $half := div (math.Round (mul (div $r 2.0) 2.0)) 2.0 -}}
+  {{- $pct = math.Round (mul (div $half 5.0) 100.0) -}}
+{{- end -}}
+<span class="{{ $class }}" style="--pct: {{ $pct }}%" role="img" aria-label="{{ with $rating }}{{ . }} 分{{ else }}暂无评分{{ end }}">
+  <span class="aw-stars-bg" aria-hidden="true">★★★★★</span>
+  <span class="aw-stars-fg" aria-hidden="true">★★★★★</span>
+</span>

@@ -75,6 +75,12 @@ paginate = 30
     weight = 5
 
   [[menu.main]]
+    identifier = "album"
+    name = "专辑"
+    url = "/album/"
+    weight = 6
+
+  [[menu.main]]
     identifier = "tags"
     name = "标签"
     url = "/tags/"
