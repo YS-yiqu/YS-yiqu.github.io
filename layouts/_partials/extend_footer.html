@@ -100,6 +100,7 @@
   // 专辑页临时歌单：当前专辑 + 列表代次（防止旧的歌单请求把专辑列表覆盖掉）
   var currentAlbum = null;
   var listGen = 0;
+  var savedOrder = null;
 
   // ---------- 歌单切换 ----------
   var sel = document.getElementById("mp-sel");
@@ -155,6 +156,7 @@
   }
 
   function load(id, onDone) {
+    if (savedOrder !== null) { setOrder(savedOrder); savedOrder = null; }
     var gen = ++listGen;
     pull(id)
       .then(function (list) {
@@ -167,6 +169,12 @@
         if (onDone) onDone();
       })
       .catch(function () {});
+  }
+
+  // 专辑按曲目顺序播；切回普通歌单时恢复原来的随机/顺序设置
+  function setOrder(order) {
+    if (!order || ap.options.order === order) return;
+    try { ap.template.order.click(); } catch (e) { ap.options.order = order; }
   }
 
   // 专辑页「播放专辑」：把这张专辑临时塞进播放器，不改动已有歌单
@@ -186,6 +194,8 @@
       }));
     }
     if (!songs.length) { say("这张专辑没有可播放的曲目"); return; }
+    if (savedOrder === null) savedOrder = ap.options.order;
+    setOrder("list");
     ++listGen;
     currentAlbum = album;
     ap.list.clear();
