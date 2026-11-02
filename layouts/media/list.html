@@ -2,8 +2,9 @@
 
 {{- /* 数据来自 assets/movies.csv（照 Shaocheng.Li 的做法：海报墙由一份 CSV 驱动）。
        列：title,year,rating,rating_source,quote,poster,douban,jellyfin_id,watched
-       quote 现在是本人在豆瓣「看过」时写的短评原文（长文由下面的 CSS 截行显示）；
-       watched 填了年份才上墙，按年份分栏；点海报去处：填了 douban 就新窗口跳豆瓣，没填则不可点。 */ -}}
+       quote 是本人豆瓣「看过」时写的短评原文（悬停时整段显示，面板随字数长出海报）；
+       watched 填观看日期（YYYY-MM-DDTHH:MM）才上墙，按日期倒序、按年份分栏；
+       点海报去处：填了 douban 就新窗口跳豆瓣，没填则不可点。 */ -}}
 {{- $films := slice }}
 {{- with resources.Get "movies.csv" }}
   {{- $rows := . | transform.Unmarshal }}
@@ -16,20 +17,20 @@
     {{- $films = $films | append $f }}
   {{- end }}
 {{- end }}
-{{- $films = sort $films "year" "desc" }}
-{{- /* 这个墙是「看片记录」：只显示 watched 列填了年份的条目，按观看年份分栏，新的在上 */ -}}
+{{- $films = sort $films "title" "asc" }}
+{{- /* 这个墙是「看片记录」：watched 有值才上墙。watched 记观看日期（YYYY-MM-DD，老数据只写年份也认），
+       2026-11-02 起改为按观看日期倒序、按年份分栏（此前是按影片年份排） */ -}}
 {{- $watched := slice }}
-{{- $years := slice }}
 {{- range $f := $films }}
-  {{- with $f.watched }}
-    {{- $watched = $watched | append $f }}
-    {{- $years = $years | append (string .) }}
-  {{- end }}
+  {{- with $f.watched }}{{ $watched = $watched | append $f }}{{ end }}
 {{- end }}
+{{- $watched = sort $watched "watched" "desc" }}
 {{- $count := len $watched }}
-{{- $yearGroups := slice }}
-{{- range ($years | uniq) }}{{ $yearGroups = $yearGroups | append (dict "y" .) }}{{ end }}
-{{- $yearGroups = sort $yearGroups "y" "desc" }}
+{{- $years := slice }}
+{{- range $watched }}
+  {{- $y := substr (string .watched) 0 4 }}
+  {{- if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}
+{{- end }}
 
 {{- /* 影音板块专用样式：选择器一律 .mw- 前缀，只作用于本页，不碰全站与其它文章 */ -}}
 <style>
@@ -141,14 +142,15 @@
 <div class="post-content md-content">{{ .Content }}</div>
 {{- end }}
 
-<p class="mw-count">共 {{ $count }} 部 · 按观看年份分栏</p>
+<p class="mw-count">共 {{ $count }} 部 · 按观看时间倒序，按年份分栏</p>
 
 {{- if eq $count 0 }}
-<p class="mw-note">还没有看片记录：在 assets/movies.csv 里给看过的那一行的 watched 列填上年份，这里就会出现。</p>
+<p class="mw-note">还没有看片记录：在 assets/movies.csv 里给看过的那一行的 watched 列填上观看日期（YYYY-MM-DD），这里就会出现。</p>
 {{- else }}
-{{- range $yearGroups }}
-{{- $y := .y }}
-{{- $group := where $watched "watched" $y }}
+{{- range $years }}
+{{- $y := . }}
+{{- $group := slice }}
+{{- range $watched }}{{ if eq (substr (string .watched) 0 4) $y }}{{ $group = $group | append . }}{{ end }}{{ end }}
 <h2 class="mw-year"><span>{{ $y }} 观看</span><span class="mw-year-n">{{ len $group }} 部</span></h2>
 <div class="mw-grid">
   {{- range $f := $group }}
