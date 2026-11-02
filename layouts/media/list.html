@@ -66,7 +66,8 @@
     font-size: 11px; font-weight: 500; color: var(--secondary);
   }
 
-  /* 悬停：整块 90% 黑遮罩，信息居中 */
+  /* 悬停：整块 90% 黑遮罩。短评要整段看到（豆瓣短评上限 350 字，2026-11-02 改）：
+     遮罩按内容向下长出海报也不裁，最高到 70vh，再长则在遮罩里滚动 */
   .mw-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, .9);
@@ -76,16 +77,30 @@
     transition: opacity .3s ease;
     overflow: hidden;
   }
-  .mw-cell:hover .mw-overlay { opacity: 1; }
+  /* z-index 要压过左下角固定的音乐播放器（.mp-open，9990），否则长短评下半截被播放器盖住 */
+  .mw-cell:hover, .mw-cell:focus-within { z-index: 9995; overflow: visible; }
+  .mw-cell:hover .mw-link, .mw-cell:focus-within .mw-link { overflow: visible; }
+  .mw-cell:hover .mw-overlay, .mw-cell:focus-within .mw-overlay {
+    opacity: 1;
+    height: auto;
+    min-height: 100%;
+    max-height: 70vh;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 14px .7rem 18px;
+    border-radius: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+    scrollbar-width: thin;
+  }
   .mw-overlay p { color: #fff; text-align: center; margin: 3px 0; }
   .mw-title { font-weight: 700; font-size: 16px; line-height: 1.4; }
   .mw-meta { font-weight: 700; font-size: 14px; }
-  .mw-quote {
+  .mw-overlay p.mw-quote {
     font-size: 12.5px; font-weight: 400; line-height: 1.6; opacity: .92;
     white-space: pre-line;
-    /* 短评原文照存，长文只截 8 行显示（2026-10-18 加）：不截的话整段撑破悬停框，
-       连片名和年份都会被挤出可视区 */
-    display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical; overflow: hidden;
+    width: 100%; margin-top: 6px;
+    text-align: left;
   }
 
   /* 年份分隔栏：左边「2026 观看」，右边部数，下面一条细线 */
