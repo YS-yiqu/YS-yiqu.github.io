@@ -71,10 +71,31 @@
     font-size: 13px; text-align: center;
   }
 
+  /* 统计条（2026-11-09 加）：本周／本月／今年／累计 + 近 12 个月柱状图；
+     日期取每本书 index.md 的 read（YYYY-MM-DD），数字由页面内 JS 算，跨周跨月自动更新。
+     累计按上墙本数算，没填 read 的书也计入累计，只是不进本周／本月／今年与柱状图。 */
+  .bw-stats { margin: 14px 0 4px; }
+  .bw-nums { display: flex; gap: 10px; }
+  .bw-num { flex: 1; background: var(--theme); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px 10px; }
+  .bw-num b { display: block; font-size: 26px; line-height: 1.1; font-weight: 800; }
+  .bw-num span { font-size: 12.5px; color: var(--secondary); }
+  .bw-chart {
+    display: flex; align-items: flex-end; gap: 6px; height: 96px;
+    margin-top: 18px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
+  }
+  .bw-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .bw-bar { width: 70%; background: var(--tertiary); border-radius: 3px 3px 0 0; min-height: 2px; }
+  .bw-bar.on { background: #2d8cf0; }
+  .bw-val { height: 13px; margin-bottom: 3px; font-size: 11px; font-weight: 700; color: #2d8cf0; }
+  .bw-months { display: flex; gap: 6px; margin-top: 6px; }
+  .bw-months span { flex: 1; text-align: center; font-size: 11px; color: var(--secondary); }
+
   @media (max-width: 900px) { .bw-cell { width: 33.3333%; } }
   @media (max-width: 620px) {
     .bw-cell { width: 50%; }
     .bw-ov-title { font-size: 14px; }
+    .bw-nums { flex-wrap: wrap; }
+    .bw-num { flex: 1 1 40%; }
   }
   /* 触屏没有悬停：按住（点）格子时出遮罩 */
   @media (hover: none) {
@@ -95,6 +116,16 @@
 {{- end }}
 
 <p class="bw-count">共 {{ len $books }} 本 · 评分来自豆瓣（10 分制）</p>
+
+{{- if gt (len $books) 0 }}
+{{- $dates := slice }}
+{{- range $books }}{{ with .Params.read }}{{ $dates = $dates | append (string .) }}{{ end }}{{ end }}
+<div class="bw-stats" id="bwStats" data-dates="{{ delimit $dates "," }}" data-total="{{ len $books }}">
+  <div class="bw-nums" id="bwNums"></div>
+  <div class="bw-chart" id="bwChart"></div>
+  <div class="bw-months" id="bwMonths"></div>
+</div>
+{{- end }}
 
 <div class="bw-grid">
   {{- range $books }}
@@ -139,5 +170,60 @@
 </div>
 
 <p class="bw-note">评分与简介来自豆瓣读书；封面取自豆瓣条目。</p>
+
+<script>
+  /* 书籍墙统计条：按 data-dates 里的阅读日期算 本周／本月／今年／累计 与近 12 个月柱状图；
+     累计取上墙本数（data-total），没填 read 的书也计入累计，只是不进本周／本月／今年和柱子。
+     IIFE 包起来，换页时 Turbo 重跑也不会重复声明；容器已有内容就重画，幂等。 */
+  (function () {
+    var box = document.getElementById('bwStats');
+    if (!box) return;
+    var raw = (box.getAttribute('data-dates') || '').split(',').filter(Boolean);
+    var dates = raw.map(function (s) {
+      s = s.trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) s += 'T00:00';
+      var d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    }).filter(Boolean);
+
+    var total = parseInt(box.getAttribute('data-total'), 10);
+    if (isNaN(total)) total = dates.length;
+
+    var now = new Date();
+    var monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));   // 本周一
+    var y = now.getFullYear(), m = now.getMonth();
+
+    function count(fn) { return dates.filter(fn).length; }
+    var stats = [
+      ['本周', count(function (d) { return d >= monday; })],
+      ['本月', count(function (d) { return d.getFullYear() === y && d.getMonth() === m; })],
+      ['今年', count(function (d) { return d.getFullYear() === y; })],
+      ['累计', total]
+    ];
+    document.getElementById('bwNums').innerHTML = stats.map(function (s) {
+      return '<div class="bw-num"><b>' + s[1] + '</b><span>' + s[0] + '</span></div>';
+    }).join('');
+
+    var months = [];
+    for (var i = 11; i >= 0; i--) {
+      var d = new Date(y, m - i, 1);
+      months.push({
+        d: d,
+        n: count(function (f) { return f.getFullYear() === d.getFullYear() && f.getMonth() === d.getMonth(); })
+      });
+    }
+    var max = Math.max.apply(null, [1].concat(months.map(function (x) { return x.n; })));
+    document.getElementById('bwChart').innerHTML = months.map(function (x) {
+      return '<div class="bw-col" title="' + x.d.getFullYear() + '-' + ('0' + (x.d.getMonth() + 1)).slice(-2) + '">' +
+        '<div class="bw-val">' + (x.n || '') + '</div>' +
+        '<div class="bw-bar' + (x.n ? ' on' : '') + '" style="height:' + (x.n / max * 100) + '%"></div>' +
+        '</div>';
+    }).join('');
+    document.getElementById('bwMonths').innerHTML = months.map(function (x) {
+      return '<span>' + (x.d.getMonth() + 1) + '</span>';
+    }).join('');
+  })();
+</script>
 
 {{- end }}{{/* end main */}}
