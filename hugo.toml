@@ -81,6 +81,12 @@ paginate = 30
     weight = 6
 
   [[menu.main]]
+    identifier = "books"
+    name = "书籍"
+    url = "/books/"
+    weight = 7
+
+  [[menu.main]]
     identifier = "tags"
     name = "标签"
     url = "/tags/"

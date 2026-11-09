@@ -1,0 +1,101 @@
+{{- define "main" -}}
+
+{{- /* 书籍详情：封面 + 出版信息 + 豆瓣式评分 + 内容简介 + 豆瓣条目。
+       样式选择器一律 .bw- 前缀，只作用于本页。 */ -}}
+
+{{- $cover := .Resources.GetMatch "cover.*" -}}
+
+<style>
+  .bw-detail { max-width: 860px; margin: 0 auto; }
+  .bw-back { display: inline-block; font-size: 13px; color: var(--secondary); text-decoration: none !important; margin-bottom: 18px; }
+  .bw-back:hover { color: #2d8cf0; }
+
+  .bw-hero { display: grid; grid-template-columns: 240px 1fr; gap: 30px; align-items: start; margin-bottom: 34px; }
+  .bw-hero-cover {
+    width: 100%; aspect-ratio: 2 / 3; border-radius: 8px; overflow: hidden;
+    background: var(--code-bg); box-shadow: 0 12px 30px rgba(0, 0, 0, .16);
+  }
+  .bw-hero-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .bw-title { font-size: 30px; line-height: 1.25; margin: 0 0 6px; color: var(--primary); }
+  .bw-author { font-size: 16px; font-weight: 600; color: #2d8cf0; margin: 0 0 8px; }
+  .bw-meta-line { font-size: 13px; color: var(--secondary); margin: 0; }
+
+  .bw-rating-box {
+    display: flex; align-items: center; gap: 14px;
+    margin: 18px 0 0; padding: 12px 16px;
+    background: var(--code-bg); border-radius: 8px;
+  }
+  .bw-big-score { font-size: 30px; font-weight: 700; color: #e8850c; line-height: 1; }
+  .bw-rating-count { font-size: 12px; color: var(--secondary); margin-top: 4px; }
+
+  .bw-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .bw-btn {
+    display: inline-block; padding: 7px 16px; border-radius: 6px;
+    background: #2d8cf0; color: #fff !important;
+    font-size: 13px; text-decoration: none !important; line-height: 1.5;
+  }
+  .bw-btn:hover { background: #1a73d1; }
+  .bw-btn-ghost { background: transparent; color: #2d8cf0 !important; border: 1px solid #b9d8f7; }
+  .bw-btn-ghost:hover { background: #f1f8ff; }
+
+  .bw-intro { margin: 10px 0 18px; border: 1px solid var(--tertiary); border-radius: 8px; padding: 10px 16px; }
+  .bw-intro summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2d8cf0; }
+  .bw-intro-body { margin-top: 12px; font-size: 14px; line-height: 1.85; color: var(--primary); }
+  .bw-intro-body p { margin: 0 0 10px; }
+
+  .bw-copy { font-size: 12px; color: var(--secondary); margin-top: 18px; }
+
+  /* 豆瓣式五星：底星灰、亮星按百分比裁切 */
+  .bw-stars { position: relative; display: inline-block; line-height: 1; font-size: 12px; letter-spacing: 1px; white-space: nowrap; vertical-align: middle; }
+  .bw-stars .aw-stars-bg { color: var(--tertiary); }
+  .bw-stars .aw-stars-fg { position: absolute; left: 0; top: 0; width: var(--pct); overflow: hidden; color: #f5a623; white-space: nowrap; }
+  .bw-stars-lg { font-size: 20px; letter-spacing: 2px; }
+
+  @media (max-width: 720px) {
+    .bw-hero { grid-template-columns: 1fr; gap: 18px; }
+    .bw-hero-cover { width: 180px; }
+    .bw-title { font-size: 24px; }
+  }
+</style>
+
+<article class="bw-detail">
+  <a class="bw-back" href="{{ .Parent.RelPermalink }}">← 书籍墙</a>
+
+  <div class="bw-hero">
+    <div class="bw-hero-cover">
+      {{- with $cover }}
+      <img src="{{ .RelPermalink }}" alt="{{ $.Title }} 封面">
+      {{- end }}
+    </div>
+    <div class="bw-hero-info">
+      <h1 class="bw-title">{{ .Title }}</h1>
+      <p class="bw-author">{{ .Params.author }}</p>
+      <p class="bw-meta-line">{{ with .Params.edition }}{{ . }} · {{ end }}{{ .Params.publisher }} · {{ .Params.year }}{{ with .Params.pages }} · {{ . }} 页{{ end }}{{ with .Params.price }} · 定价 {{ . }} 元{{ end }}</p>
+
+      <div class="bw-rating-box">
+        <div class="bw-big-score">{{ .Params.rating }}</div>
+        <div>
+          {{ partial "rating-stars.html" (dict "rating" .Params.rating "class" "bw-stars bw-stars-lg") }}
+          <div class="bw-rating-count">{{ .Params.rating_count }} 人评分 · {{ .Params.rating_source }}</div>
+        </div>
+      </div>
+
+      <div class="bw-actions">
+        {{- with .Params.douban }}
+        <a class="bw-btn" href="{{ . }}" target="_blank" rel="noopener">豆瓣条目</a>
+        {{- end }}
+      </div>
+    </div>
+  </div>
+
+  {{- with .Content }}
+  <details class="bw-intro" open>
+    <summary>内容简介</summary>
+    <div class="bw-intro-body">{{ . }}</div>
+  </details>
+  {{- end }}
+
+  <p class="bw-copy">评分与简介来自豆瓣读书，封面取自豆瓣条目。</p>
+</article>
+
+{{- end }}{{/* end main */}}
