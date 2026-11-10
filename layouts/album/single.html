@@ -149,7 +149,7 @@
 {{- if $tracks }}
 {{- $trackData := slice -}}
 {{- range $tracks -}}
-  {{- $trackData = $trackData | append (dict "title" .title "netease_id" .netease_id "duration" .duration) -}}
+  {{- $trackData = $trackData | append (dict "title" .title "netease_id" .netease_id "duration" .duration "audio" .audio) -}}
 {{- end -}}
 {{- $coverURL := "" -}}
 {{- with $cover }}{{ $coverURL = .RelPermalink }}{{ end -}}

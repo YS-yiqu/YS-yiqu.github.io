@@ -26,6 +26,7 @@ tracks:
   - title: "考试什么的都去死吧"
     duration: "3:38"
     netease_id: 0
+    audio: "/audio/buliang-shaonian/kaoshi.m4a"
   - title: "不良"
     duration: "3:38"
     netease_id: 174951

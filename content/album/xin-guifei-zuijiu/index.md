@@ -17,9 +17,11 @@ tracks:
   - title: "新贵妃醉酒"
     duration: "4:39"
     netease_id: 0
+    audio: "/audio/xin-guifei-zuijiu/xin-guifei-zuijiu.m4a"
   - title: "镜花水月"
     duration: "4:54"
     netease_id: 0
+    audio: "/audio/xin-guifei-zuijiu/jinghua-shuiyue.m4a"
   - title: "水墨丹青"
     duration: "3:45"
     netease_id: 132315
@@ -32,15 +34,18 @@ tracks:
   - title: "南飞雁"
     duration: "4:00"
     netease_id: 0
+    audio: "/audio/xin-guifei-zuijiu/nanfeiyan.m4a"
   - title: "梦青衣"
     duration: "4:34"
     netease_id: 132323
   - title: "秋月"
     duration: "3:03"
     netease_id: 0
+    audio: "/audio/xin-guifei-zuijiu/qiuyue.m4a"
   - title: "天池"
     duration: "3:56"
     netease_id: 0
+    audio: "/audio/xin-guifei-zuijiu/tianchi.m4a"
   - title: "莫斯科郊外的晚上"
     duration: "3:54"
     netease_id: 132329

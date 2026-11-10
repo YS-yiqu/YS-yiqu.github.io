@@ -184,6 +184,16 @@
     for (var i = 0; i < album.tracks.length; i++) {
       var t = album.tracks[i] || {};
       var nid = t.netease_id || t.id;
+      // 网易云没有音源的曲目：专辑页可直接给一条自带音频地址（audio 字段），优先用它
+      if (t.audio) {
+        songs.push(mapSong({
+          title: t.title || t.name,
+          author: album.artist,
+          url: t.audio,
+          pic: album.cover
+        }));
+        continue;
+      }
       if (!nid) continue;
       songs.push(mapSong({
         title: t.title || t.name,
