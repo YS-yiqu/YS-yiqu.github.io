@@ -101,11 +101,15 @@
       <p class="aw-meta-line">{{ .Params.release_date }}{{ with .Params.label }} · {{ . }}{{ end }}{{ with .Params.genre }} · {{ . }}{{ end }}</p>
 
       <div class="aw-rating-box">
-        <div class="aw-big-score">{{ .Params.rating }}</div>
+        {{- with .Params.rating }}
+        <div class="aw-big-score">{{ . }}</div>
         <div>
-          {{ partial "rating-stars.html" (dict "rating" .Params.rating "class" "aw-stars aw-stars-lg") }}
-          <div class="aw-rating-count">{{ .Params.rating_count }} 人评分 · {{ .Params.rating_source }}</div>
+          {{ partial "rating-stars.html" (dict "rating" . "class" "aw-stars aw-stars-lg") }}
+          <div class="aw-rating-count">{{ $.Params.rating_count }} 人评分 · {{ $.Params.rating_source }}</div>
         </div>
+        {{- else }}
+        <div class="aw-rating-count">豆瓣暂无评分</div>
+        {{- end }}
       </div>
 
       <div class="aw-actions">

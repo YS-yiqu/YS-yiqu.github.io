@@ -4,7 +4,13 @@
        悬停效果照影音墙：90% 黑遮罩 + 白字；点封面进入专辑详情（曲目表）。
        样式选择器一律 .aw- 前缀，只作用于本页。 */ -}}
 
-{{- $albums := .Pages.ByWeight -}}
+{{- /* 排序口径（2026-11-10 定）：年份倒序，新的在前；同一年内按发行日倒序。
+       外层按 Params.year 排、内层先按 Params.date 排一次即可保证「同年内新在前」。
+       注意：不要用 .Pages.GroupByParam，本机 Hugo 0.162.1 下它对 section 的 .Pages 返回空组。 */ -}}
+{{- $albums := slice -}}
+{{- range sort (sort .Pages "Params.date" "desc") "Params.year" "desc" -}}
+  {{- $albums = $albums | append . -}}
+{{- end -}}
 
 <style>
   .aw-head { margin-bottom: 6px; }
