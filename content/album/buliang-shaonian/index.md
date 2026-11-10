@@ -26,7 +26,7 @@ tracks:
   - title: "考试什么的都去死吧"
     duration: "3:38"
     netease_id: 0
-    audio: "/audio/buliang-shaonian/kaoshi.m4a"
+    audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/buliang-shaonian/kaoshi.m4a"
   - title: "不良"
     duration: "3:38"
     netease_id: 174951
