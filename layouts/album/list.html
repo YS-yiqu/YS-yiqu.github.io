@@ -11,6 +11,11 @@
 {{- range sort (sort .Pages "Params.date" "desc") "Params.year" "desc" -}}
   {{- $albums = $albums | append . -}}
 {{- end -}}
+{{- /* 年份分栏（2026-11-10 加，照影音墙的年份分隔栏）：$albums 已按年份倒序，按出现顺序去重取年份 */ -}}
+{{- $years := slice -}}
+{{- range $albums -}}
+  {{- if not (in $years .Params.year) }}{{ $years = $years | append .Params.year }}{{ end -}}
+{{- end -}}
 
 <style>
   .aw-head { margin-bottom: 6px; }
@@ -18,7 +23,16 @@
   .aw-count { color: var(--secondary); font-size: 13px; margin: 12px 0 2px; }
   .aw-note { color: var(--secondary); font-size: 12px; margin: 12px 0 0; }
 
-  .aw-grid { display: flex; flex-wrap: wrap; margin: 14px -.5rem 0; }
+  /* 年份分隔栏：左边「2026 发行」，右边张数，下面一条细线（照影音墙 .mw-year） */
+  .aw-year {
+    display: flex; align-items: baseline; justify-content: space-between; gap: .6rem;
+    margin: 1.7rem 0 .1rem; padding: 0 .5rem .45rem;
+    border-bottom: 1px solid var(--tertiary);
+    font-size: 17px; font-weight: 700; letter-spacing: .02em;
+  }
+  .aw-year-n { font-size: 12.5px; font-weight: 400; color: var(--secondary); }
+
+  .aw-grid { display: flex; flex-wrap: wrap; margin: .7rem -.5rem 0; }
   .aw-cell { width: 25%; padding-left: .5rem; padding-right: .5rem; margin-bottom: 1.6rem; }
   .aw-link { display: block; position: relative; text-decoration: none !important; }
 
@@ -99,10 +113,15 @@
 <div class="aw-intro-text">{{ . }}</div>
 {{- end }}
 
-<p class="aw-count">共 {{ len $albums }} 张 · 评分来自豆瓣（10 分制）</p>
+<p class="aw-count">共 {{ len $albums }} 张 · 按发行年份分栏，评分来自豆瓣（10 分制）</p>
 
+{{- range $years }}
+{{- $y := . }}
+{{- $group := slice }}
+{{- range $albums }}{{ if eq .Params.year $y }}{{ $group = $group | append . }}{{ end }}{{ end }}
+<h2 class="aw-year"><span>{{ $y }} 发行</span><span class="aw-year-n">{{ len $group }} 张</span></h2>
 <div class="aw-grid">
-  {{- range $albums }}
+  {{- range $group }}
   {{- $album := . -}}
   {{- $cover := $album.Resources.GetMatch "cover.*" -}}
   <div class="aw-cell">
@@ -142,6 +161,7 @@
   </div>
   {{- end }}
 </div>
+{{- end }}
 
 <p class="aw-note">评分、简介与曲目来自豆瓣音乐；封面取自网易云音乐。</p>
 
