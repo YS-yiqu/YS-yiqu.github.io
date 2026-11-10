@@ -190,7 +190,8 @@
           title: t.title || t.name,
           author: album.artist,
           url: t.audio,
-          pic: album.cover
+          pic: album.cover,
+          lrc: t.lrc || ""
         }));
         continue;
       }

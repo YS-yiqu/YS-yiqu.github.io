@@ -27,6 +27,7 @@ tracks:
     duration: "3:38"
     netease_id: 0
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/buliang-shaonian/kaoshi.m4a"
+    lrc: "/audio/buliang-shaonian/kaoshi.lrc"
   - title: "不良"
     duration: "3:38"
     netease_id: 174951
