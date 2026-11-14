@@ -15,7 +15,7 @@ description: "海伦 2019 年发行的《游京》，豆瓣 6.1 分；页面收�
 weight: 17
 tracks:
   - title: "游京"
-    duration: "3:46"
+    duration: "3:45"
     netease_id: 0
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/youjing/youjing.m4a"
     lrc: "/audio/youjing/youjing.lrc"
