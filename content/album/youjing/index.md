@@ -11,21 +11,18 @@ rating_count: 265
 rating_source: "豆瓣"
 douban: "https://music.douban.com/subject/35274398/"
 netease: "https://music.163.com/album?id=125362967"
-description: "海伦 2019 年发行的《游京》，豆瓣 6.1 分；网易云现收录 2020 新版四首（含 DJ 阿卓版与两首伴奏）。"
+description: "海伦 2019 年发行的《游京》，豆瓣 6.1 分；页面收录原版与伴奏两首，网易云上架的 2020 新版四首为会员曲、公开接口取不到播放地址。"
 weight: 17
 tracks:
-  - title: "游京 (新版)"
-    duration: "3:08"
-    netease_id: 1833656350
-  - title: "游京 (DJ阿卓版)"
-    duration: "4:03"
-    netease_id: 1833653367
-  - title: "游京 (DJ阿卓版伴奏)"
-    duration: "4:03"
-    netease_id: 1833653368
-  - title: "游京 (新版伴奏)"
-    duration: "3:08"
-    netease_id: 1833656351
+  - title: "游京"
+    duration: "3:46"
+    netease_id: 0
+    audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/youjing/youjing.m4a"
+    lrc: "/audio/youjing/youjing.lrc"
+  - title: "游京 (伴奏)"
+    duration: "3:46"
+    netease_id: 0
+    audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/youjing/youjing-banzou.m4a"
 ---
 
 <p>新歌《游京》 是描写古代京城之美，</p>
