@@ -28,6 +28,10 @@ tracks:
     duration: "4:08"
     netease_id: 0
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/youjing/youjing-dj-azhuo.m4a"
+  - title: "游京 (DJ阿卓版伴奏)"
+    duration: "4:04"
+    netease_id: 0
+    audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/youjing/youjing-dj-azhuo-banzou.m4a"
   - title: "游京 (新版伴奏)"
     duration: "3:08"
     netease_id: 0
