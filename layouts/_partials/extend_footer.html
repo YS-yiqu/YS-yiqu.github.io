@@ -50,9 +50,11 @@
   if (window.__mpBooted) return;
   window.__mpBooted = true;
 
-  // 专辑页「播放专辑」：播放器还没起来时先记住，boot 完成后再放
+  // 专辑页「播放专辑」/ 点单首曲目：播放器还没起来时先记住，boot 完成后再放
   if (typeof window.mpPlayAlbum !== "function") {
-    window.mpPlayAlbum = function (album) { window.__mpPendingAlbum = album; };
+    window.mpPlayAlbum = function (album, index) {
+      window.__mpPendingAlbum = { album: album, index: index || 0 };
+    };
   }
 
   function boot() {
@@ -99,6 +101,7 @@
   var added = [];
   // 专辑页临时歌单：当前专辑 + 列表代次（防止旧的歌单请求把专辑列表覆盖掉）
   var currentAlbum = null;
+  var albumMap = [];   // 播放器里的第 n 首 → 专辑曲目序号（曲目缺音源被跳过时两者不等）
   var listGen = 0;
   var savedOrder = null;
 
@@ -162,6 +165,9 @@
       .then(function (list) {
         if (gen !== listGen) return;
         if (!Array.isArray(list) || !list.length) return;
+        // 换回普通歌单：专辑高亮的映射失效，清掉
+        currentAlbum = null;
+        albumMap = [];
         ap.list.clear();
         ap.list.add(list.map(mapSong));
         lsSet("mp-list", id);
@@ -177,13 +183,19 @@
     try { ap.template.order.click(); } catch (e) { ap.options.order = order; }
   }
 
-  // 专辑页「播放专辑」：把这张专辑临时塞进播放器，不改动已有歌单
-  function loadAlbum(album) {
+  // 专辑页「播放专辑」/ 点某一首：把这整张专辑临时塞进播放器，不改动已有歌单
+  // startIndex 为点的那首在专辑曲目里的序号（0 起），缺省从第一首开始
+  function loadAlbum(album, startIndex) {
     if (!album || !album.tracks || !album.tracks.length) return;
+    var want = parseInt(startIndex, 10);
+    if (isNaN(want) || want < 0) want = 0;
+    var startSong = 0;
     var songs = [];
+    albumMap = [];
     for (var i = 0; i < album.tracks.length; i++) {
       var t = album.tracks[i] || {};
       var nid = t.netease_id || t.id;
+      if (i === want) startSong = songs.length;
       // 网易云没有音源的曲目：专辑页可直接给一条自带音频地址（audio 字段），优先用它
       if (t.audio) {
         songs.push(mapSong({
@@ -193,6 +205,7 @@
           pic: album.cover,
           lrc: t.lrc || ""
         }));
+        albumMap.push(i);
         continue;
       }
       if (!nid) continue;
@@ -203,8 +216,11 @@
         pic: album.cover,
         lrc: URL_API + "netease&type=lrc&id=" + nid
       }));
+      albumMap.push(i);
     }
     if (!songs.length) { say("这张专辑没有可播放的曲目"); return; }
+    // 点的那首没有音源被跳过时，退回第一首
+    if (startSong >= songs.length) startSong = 0;
     if (savedOrder === null) savedOrder = ap.options.order;
     setOrder("list");
     ++listGen;
@@ -222,8 +238,11 @@
     sel.value = "__album__";
     clearAdded();
     openPanel();
-    playAt(0);
-    say("已切到专辑《" + (album.title || "") + "》，共 " + songs.length + " 首");
+    playAt(startSong);
+    setTimeout(notifyTrack, 0);
+    say(want > 0
+      ? "专辑《" + (album.title || "") + "》第 " + (want + 1) + " 首开始，共 " + songs.length + " 首"
+      : "已切到专辑《" + (album.title || "") + "》，共 " + songs.length + " 首");
   }
 
   // ---------- 上一首 / 下一首 ----------
@@ -440,6 +459,17 @@
       clearAdded();
     }, 0);
   });
+
+  // 专辑页曲目行高亮：换曲后把「专辑里的第几首」发给页面；不在专辑歌单里就给 -1
+  function notifyTrack() {
+    var detail = { album: null, index: -1 };
+    if (currentAlbum && albumMap.length === ap.list.audios.length) {
+      detail.album = currentAlbum.title || "";
+      detail.index = albumMap[ap.list.index] == null ? -1 : albumMap[ap.list.index];
+    }
+    try { document.dispatchEvent(new CustomEvent("mp:track", { detail: detail })); } catch (e) {}
+  }
+  ap.on("listswitch", function () { setTimeout(notifyTrack, 0); });
 
   // 比对用归一化：去空格、统一小写、去掉各种括号与标点
   function norm(s) {
@@ -670,12 +700,14 @@
     showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
   }
 
-  // 专辑页「播放专辑」入口：boot 完成后替换掉占位函数
-  window.mpPlayAlbum = function (album) { loadAlbum(album); };
+  // 专辑页「播放专辑」与点单首曲目的入口：boot 完成后替换掉占位函数
+  window.mpPlayAlbum = function (album, index) { loadAlbum(album, index); };
   if (window.__mpPendingAlbum) {
     var pendingAlbum = window.__mpPendingAlbum;
     window.__mpPendingAlbum = null;
-    loadAlbum(pendingAlbum);
+    // 兼容两种形状：专辑对象本身，或 { album, index }
+    if (pendingAlbum && pendingAlbum.album) loadAlbum(pendingAlbum.album, pendingAlbum.index);
+    else loadAlbum(pendingAlbum);
   }
   }
 

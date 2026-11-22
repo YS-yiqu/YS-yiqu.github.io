@@ -59,9 +59,20 @@
     display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 10px;
     align-items: baseline; padding: 9px 4px;
     border-bottom: 1px solid var(--tertiary);
+    cursor: pointer;
   }
   .aw-tracks li:hover { background: var(--code-bg); }
   .aw-no { font-family: Consolas, 'Courier New', monospace; font-size: 12.5px; color: var(--secondary); }
+  .aw-no i { font-style: normal; }
+  /* 曲目行：鼠标移上去把序号换成播放三角，点了就进播放器的专辑清单并播这首 */
+  .aw-trk-ico { display: none; color: #2d8cf0; font-size: 11px; line-height: 1; }
+  .aw-trk:hover .aw-no i { display: none; }
+  .aw-trk:hover .aw-trk-ico { display: inline-block; }
+  .aw-trk:focus-visible { outline: 2px solid #2d8cf0; outline-offset: -2px; }
+  .aw-trk.is-playing { background: rgba(45, 140, 240, .08); }
+  .aw-trk.is-playing .aw-no i { display: none; }
+  .aw-trk.is-playing .aw-trk-ico { display: inline-block; }
+  .aw-trk.is-playing .aw-tname { color: #2d8cf0; }
   .aw-tname { font-size: 14.5px; color: var(--primary); }
   .aw-dur { font-family: Consolas, 'Courier New', monospace; font-size: 12px; color: var(--secondary); }
 
@@ -130,8 +141,8 @@
     <div class="aw-tracks-head"><h2>曲目</h2><span>{{ len . }} 首</span></div>
     <ol>
       {{- range $i, $t := . }}
-      <li>
-        <span class="aw-no">{{ printf "%02d" (add $i 1) }}</span>
+      <li class="aw-trk" data-index="{{ $i }}" role="button" tabindex="0" aria-label="播放 {{ $t.title }}">
+        <span class="aw-no"><i>{{ printf "%02d" (add $i 1) }}</i><span class="aw-trk-ico" aria-hidden="true">▶</span></span>
         <span class="aw-tname">{{ $t.title }}</span>
         <span class="aw-dur">{{ $t.duration }}</span>
       </li>
@@ -161,20 +172,69 @@
 <script type="application/json" id="aw-album-data">{{ $albumData | jsonify | safeJS }}</script>
 <script>
 (function () {
-  var btn = document.getElementById("aw-play-album");
   var dataEl = document.getElementById("aw-album-data");
-  if (!btn || !dataEl || btn.getAttribute("data-bound") === "1") return;
-  btn.setAttribute("data-bound", "1");
-  btn.addEventListener("click", function () {
-    var album;
-    try { album = JSON.parse(dataEl.textContent); } catch (e) { return; }
+  if (!dataEl || dataEl.getAttribute("data-bound") === "1") return;
+  dataEl.setAttribute("data-bound", "1");
+
+  function albumData() {
+    try { return JSON.parse(dataEl.textContent); } catch (e) { return null; }
+  }
+  function startAt(album, index) {
+    if (!album) return;
     if (typeof window.mpPlayAlbum === "function") {
-      window.mpPlayAlbum(album);
+      window.mpPlayAlbum(album, index || 0);
     } else {
-      window.__mpPendingAlbum = album;
+      window.__mpPendingAlbum = { album: album, index: index || 0 };
     }
-    btn.blur();
-  });
+  }
+
+  var btn = document.getElementById("aw-play-album");
+  if (btn) {
+    btn.addEventListener("click", function () {
+      startAt(albumData(), 0);
+      btn.blur();
+    });
+  }
+
+  // 曲目行：点哪首都把整张专辑塞进播放器，并从这首开始播
+  var rows = document.querySelectorAll(".aw-tracks li.aw-trk");
+  function mark(el) {
+    for (var k = 0; k < rows.length; k++) rows[k].classList.remove("is-playing");
+    if (el) el.classList.add("is-playing");
+  }
+  function rowAt(n) {
+    for (var k = 0; k < rows.length; k++) {
+      if (parseInt(rows[k].getAttribute("data-index"), 10) === n) return rows[k];
+    }
+    return null;
+  }
+  for (var i = 0; i < rows.length; i++) {
+    (function (el) {
+      function go() {
+        var n = parseInt(el.getAttribute("data-index"), 10);
+        startAt(albumData(), isNaN(n) ? 0 : n);
+        mark(el);
+        el.blur();
+      }
+      el.addEventListener("click", go);
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar" || e.code === "Space") {
+          e.preventDefault();
+          go();
+        }
+      });
+    })(rows[i]);
+  }
+
+  // 播放器换曲（下一首、自动下一首）时按它报的专辑曲目序号同步高亮
+  if (window.__awTrackHandler) document.removeEventListener("mp:track", window.__awTrackHandler);
+  window.__awTrackHandler = function (e) {
+    var d = (e && e.detail) || {};
+    var mine = albumData();
+    if (!mine || d.album !== mine.title) { mark(null); return; }
+    mark(d.index >= 0 ? rowAt(d.index) : null);
+  };
+  document.addEventListener("mp:track", window.__awTrackHandler);
 })();
 </script>
 {{- end }}
