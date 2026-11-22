@@ -211,6 +211,17 @@
   for (var i = 0; i < rows.length; i++) {
     (function (el) {
       function go() {
+        // 站内换页不重载播放器：老标签页里可能还驻留着不支持「从第几首起播」的旧脚本。
+        // 旧函数的形参只有 1 个，这里发现就强制刷新一次拿新代码（一次性，避免刷新循环）。
+        if (typeof window.mpPlayAlbum === "function" && window.mpPlayAlbum.length < 2) {
+          try {
+            if (!sessionStorage.getItem("mp-stale-reload")) {
+              sessionStorage.setItem("mp-stale-reload", "1");
+              location.reload();
+              return;
+            }
+          } catch (e) {}
+        }
         var n = parseInt(el.getAttribute("data-index"), 10);
         startAt(albumData(), isNaN(n) ? 0 : n);
         mark(el);

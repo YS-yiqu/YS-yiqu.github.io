@@ -49,6 +49,7 @@
   // 播放器外壳与 APlayer 生成的 <audio> 都是 Turbo 永久元素，换页时原地保留、歌曲不断。
   if (window.__mpBooted) return;
   window.__mpBooted = true;
+  window.__mpBuild = "2026-11-22a";
 
   // 专辑页「播放专辑」/ 点单首曲目：播放器还没起来时先记住，boot 完成后再放
   if (typeof window.mpPlayAlbum !== "function") {
