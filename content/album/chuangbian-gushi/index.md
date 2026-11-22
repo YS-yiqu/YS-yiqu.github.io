@@ -18,42 +18,52 @@ tracks:
     duration: "3:46"
     netease_id: 415792916
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/01.m4a"
+    lrc: "/audio/chuangbian-gushi/01.lrc"
   - title: "说走就走"
     duration: "4:26"
     netease_id: 418602084
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/02.m4a"
+    lrc: "/audio/chuangbian-gushi/02.lrc"
   - title: "一点点"
     duration: "3:41"
     netease_id: 418603076
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/03.m4a"
+    lrc: "/audio/chuangbian-gushi/03.lrc"
   - title: "前世情人"
     duration: "3:22"
     netease_id: 415792918
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/04.m4a"
+    lrc: "/audio/chuangbian-gushi/04.lrc"
   - title: "英雄"
     duration: "3:21"
     netease_id: 418602085
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/05.m4a"
+    lrc: "/audio/chuangbian-gushi/05.lrc"
   - title: "不该"
     duration: "4:50"
     netease_id: 417250561
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/06.m4a"
+    lrc: "/audio/chuangbian-gushi/06.lrc"
   - title: "土耳其冰淇淋"
     duration: "3:15"
     netease_id: 418602086
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/07.m4a"
+    lrc: "/audio/chuangbian-gushi/07.lrc"
   - title: "告白气球"
     duration: "3:35"
     netease_id: 418603077
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/08.m4a"
+    lrc: "/audio/chuangbian-gushi/08.lrc"
   - title: "Now You See Me"
     duration: "2:54"
     netease_id: 417247652
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/09.m4a"
+    lrc: "/audio/chuangbian-gushi/09.lrc"
   - title: "爱情废柴"
     duration: "4:45"
     netease_id: 418602087
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/chuangbian-gushi/10.m4a"
+    lrc: "/audio/chuangbian-gushi/10.lrc"
 ---
 
 <p>夜深了</p>

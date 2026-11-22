@@ -18,42 +18,52 @@ tracks:
     duration: "2:48"
     netease_id: 185807
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/01.m4a"
+    lrc: "/audio/wo-hen-mang/01.lrc"
   - title: "彩虹"
     duration: "4:23"
     netease_id: 185809
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/02.m4a"
+    lrc: "/audio/wo-hen-mang/02.lrc"
   - title: "青花瓷"
     duration: "3:59"
     netease_id: 185811
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/03.m4a"
+    lrc: "/audio/wo-hen-mang/03.lrc"
   - title: "阳光宅男"
     duration: "3:42"
     netease_id: 185813
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/04.m4a"
+    lrc: "/audio/wo-hen-mang/04.lrc"
   - title: "蒲公英的约定"
     duration: "4:07"
     netease_id: 185815
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/05.m4a"
+    lrc: "/audio/wo-hen-mang/05.lrc"
   - title: "无双"
     duration: "3:53"
     netease_id: 185817
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/06.m4a"
+    lrc: "/audio/wo-hen-mang/06.lrc"
   - title: "我不配"
     duration: "4:48"
     netease_id: 185818
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/07.m4a"
+    lrc: "/audio/wo-hen-mang/07.lrc"
   - title: "扯"
     duration: "3:30"
     netease_id: 185819
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/08.m4a"
+    lrc: "/audio/wo-hen-mang/08.lrc"
   - title: "甜甜的"
     duration: "4:01"
     netease_id: 185820
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/09.m4a"
+    lrc: "/audio/wo-hen-mang/09.lrc"
   - title: "最长的电影"
     duration: "3:55"
     netease_id: 185821
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/wo-hen-mang/10.m4a"
+    lrc: "/audio/wo-hen-mang/10.lrc"
 ---
 
 <p>再忙 … 也要陪你听一首歌！ 周杰伦 2008全新专辑“我很忙”！</p>

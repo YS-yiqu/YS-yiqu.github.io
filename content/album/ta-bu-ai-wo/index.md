@@ -18,30 +18,37 @@ tracks:
     duration: "4:59"
     netease_id: 247488
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/ta-bu-ai-wo.m4a"
+    lrc: "/audio/ta-bu-ai-wo/ta-bu-ai-wo.lrc"
   - title: "爱的魔法"
     duration: "3:11"
     netease_id: 247491
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/ai-de-mo-fa.m4a"
+    lrc: "/audio/ta-bu-ai-wo/ai-de-mo-fa.lrc"
   - title: "你可以不用给我答案"
     duration: "4:15"
     netease_id: 247493
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/ni-ke-yi.m4a"
+    lrc: "/audio/ta-bu-ai-wo/ni-ke-yi.lrc"
   - title: "我们结婚吧"
     duration: "3:31"
     netease_id: 247495
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/wo-men-jie-hun-ba.m4a"
+    lrc: "/audio/ta-bu-ai-wo/wo-men-jie-hun-ba.lrc"
   - title: "空灵"
     duration: "0:59"
     netease_id: 247497
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/kong-ling.m4a"
+    lrc: "/audio/ta-bu-ai-wo/kong-ling.lrc"
   - title: "告别爱的夏"
     duration: "3:19"
     netease_id: 247499
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/gao-bie-ai-de-xia.m4a"
+    lrc: "/audio/ta-bu-ai-wo/gao-bie-ai-de-xia.lrc"
   - title: "小王子的漂流瓶"
     duration: "3:18"
     netease_id: 247501
     audio: "https://raw.githubusercontent.com/YS-yiqu/YS-yiqu.github.io/main/audio/ta-bu-ai-wo/xiao-wang-zi.m4a"
+    lrc: "/audio/ta-bu-ai-wo/xiao-wang-zi.lrc"
   - title: "他不爱我(伴奏)"
     duration: "5:01"
     netease_id: 247502
