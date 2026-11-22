@@ -211,19 +211,22 @@
   for (var i = 0; i < rows.length; i++) {
     (function (el) {
       function go() {
+        var n = parseInt(el.getAttribute("data-index"), 10);
+        var alb = albumData();
         // 站内换页不重载播放器：老标签页里可能还驻留着不支持「从第几首起播」的旧脚本。
-        // 旧函数的形参只有 1 个，这里发现就强制刷新一次拿新代码（一次性，避免刷新循环）。
+        // 旧函数的形参只有 1 个；发现就记下这首、刷新一次拿新代码，回来接着播（一次性，避免刷新循环）。
         if (typeof window.mpPlayAlbum === "function" && window.mpPlayAlbum.length < 2) {
           try {
             if (!sessionStorage.getItem("mp-stale-reload")) {
               sessionStorage.setItem("mp-stale-reload", "1");
+              sessionStorage.setItem("mp-pending-click", JSON.stringify({ title: (alb || {}).title, index: isNaN(n) ? 0 : n }));
               location.reload();
               return;
             }
           } catch (e) {}
         }
-        var n = parseInt(el.getAttribute("data-index"), 10);
-        startAt(albumData(), isNaN(n) ? 0 : n);
+        try { sessionStorage.removeItem("mp-stale-reload"); } catch (e) {}
+        startAt(alb, isNaN(n) ? 0 : n);
         mark(el);
         el.blur();
       }
@@ -246,6 +249,32 @@
     mark(d.index >= 0 ? rowAt(d.index) : null);
   };
   document.addEventListener("mp:track", window.__awTrackHandler);
+
+  // 旧标签页刷新回来后，接着播刚才点的那首
+  (function resumePendingClick() {
+    var raw = null;
+    try { raw = sessionStorage.getItem("mp-pending-click"); } catch (e) {}
+    if (!raw) return;
+    var p = null;
+    try { p = JSON.parse(raw); } catch (e) {}
+    var mine = albumData();
+    try { sessionStorage.removeItem("mp-pending-click"); } catch (e) {}
+    if (!p || !mine || p.title !== mine.title) return;
+    var tries = 0;
+    var timer = setInterval(function () {
+      tries++;
+      if (typeof window.mpPlayAlbum === "function" && window.mpPlayAlbum.length >= 2) {
+        clearInterval(timer);
+        var idx = p.index || 0;
+        try { sessionStorage.removeItem("mp-stale-reload"); } catch (e) {}
+        startAt(mine, idx);
+        var el = rowAt(idx);
+        if (el) mark(el);
+      } else if (tries > 80) {
+        clearInterval(timer);
+      }
+    }, 250);
+  })();
 })();
 </script>
 {{- end }}
