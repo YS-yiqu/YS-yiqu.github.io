@@ -1,26 +1,3 @@
-{{- /* 标签页动态标题：切走标签时换标题，切回后 2 秒恢复原标题。
-       无刷新跳转下本段脚本会在每次换页时再执行一次，故只挂一次监听，
-       原标题改为切走那一刻动态取（否则换页后恢复的是上一页的标题）。 */ -}}
-<script>
-(function () {
-  if (window.__mpTitleHook) return;
-  window.__mpTitleHook = true;
-  var titleTime;
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      clearTimeout(titleTime);
-      window.__mpRealTitle = document.title;
-      document.title = "你别走吖 Σ(っ °Д °;)っ";
-    } else {
-      document.title = "(/≧▽≦/)你又回来啦！";
-      titleTime = setTimeout(function () {
-        document.title = window.__mpRealTitle || document.title;
-      }, 2000);
-    }
-  });
-})();
-</script>
-
 {{- /* 背景音乐播放器：APlayer + 自建 Meting API。可拖动、可切歌单、可折叠到侧边。 */ -}}
 <div id="mp-wrap" data-turbo-permanent>
   <div id="mp-bar">
