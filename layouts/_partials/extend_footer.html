@@ -386,6 +386,9 @@
     lsSet("mp-side", "");
     var pos = (lsGet("mp-pos") || "20,20").split(",");
     place(parseFloat(pos[0]) || 20, parseFloat(pos[1]) || 20);
+    // 从侧边小标签点回来时直接展开，别只露一条窄栏
+    wrap.classList.add("mp-open");
+    toggle.textContent = "▾";
   }
 
   document.getElementById("mp-side-btn").addEventListener("click", toSide);
@@ -697,10 +700,10 @@
     var a = pos.split(",");
     place(parseFloat(a[0]) || 20, parseFloat(a[1]) || 20);
   }
+  // 默认缩成侧边的小标签，点它才展开；记住上次折在哪一侧
   var side = lsGet("mp-side");
-  if (side === "left" || side === "right") {
-    showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
-  }
+  if (side !== "left" && side !== "right") side = "left";
+  showTab(side, parseFloat(lsGet("mp-tab-y")) || window.innerHeight / 2);
 
   // 专辑页「播放专辑」与点单首曲目的入口：boot 完成后替换掉占位函数
   window.mpPlayAlbum = function (album, index) { loadAlbum(album, index); };
