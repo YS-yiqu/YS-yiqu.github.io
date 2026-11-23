@@ -1,10 +1,15 @@
-﻿---
+---
 title: "LabVIEW 25.0 写的程序，怎么降到 19.0 上跑"
 date: 2026-11-23T22:35:00+08:00
 lastmod: 2026-11-23T22:35:00+08:00
 description: '高版本能开低版本，低版本打不开高版本。把 25.0 的 VI 另存成 19.0 只有一条路——「保存为前期版本」，坑在于新版才有的东西会留在原地，降完必须回 19.0 里编译验收。'
 tags: ["LabVIEW", "版本兼容", "工具技巧"]
 categories: ["技术"]
+cover:
+  image: "/images/labview-version-downgrade/cover.png"
+  alt: "LabVIEW 25.0 降到 19.0"
+  hidden: true
+  hiddenInSingle: true
 draft: false
 ---
 
