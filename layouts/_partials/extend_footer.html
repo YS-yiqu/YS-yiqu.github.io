@@ -318,8 +318,9 @@
   }
 
   // ---------- 收起 / 展开 ----------
+  // 默认收起：只留顶部一条窄栏，读文章时不再遮住正文；点「▴」才展开，播放专辑/搜歌会自动展开
   var toggle = document.getElementById("mp-toggle");
-  wrap.classList.add("mp-open");
+  toggle.textContent = "▴";
   toggle.addEventListener("click", function () {
     wrap.classList.toggle("mp-open");
     toggle.textContent = wrap.classList.contains("mp-open") ? "▾" : "▴";
