@@ -1,4 +1,4 @@
----
+﻿---
 title: "LabVIEW 25.0 写的程序，怎么降到 19.0 上跑"
 date: 2026-11-23T22:35:00+08:00
 lastmod: 2026-11-23T22:35:00+08:00
@@ -29,24 +29,6 @@ draft: false
 保存完会弹「保存为前期版本警告摘要」，别习惯性点忽略。19.0 里没有的函数、结构、属性，转过去要么变成带问号的 VI，要么整段丢掉，块图上就是断线。工具包里的 VI 也不跟着转，NI 的解释是工具包各有自己的版本；vi.lib 和 resource 里的 VI 不重复存，打开时自动链接到 19.0 自己的库。
 
 所以顺序是：先在 25.0 里把程序跑通，再降版本，然后在 19.0 里打开、编译，按警告摘要逐条核对。这一步省掉，等于把问题留到现场。
-
-## 整个项目一起降，用「保存版本」
-
-项目里几十个 VI 逐个另存，漏一个是常事。LabVIEW 2024 Q3 以后，项目、库、类的属性对话框里多了一项「保存版本」，选定 19.0，项目里的 VI 保存时就按这个版本写，不用再一个个转。
-
-它的行为要留意：碰上与 19.0 不兼容的功能，LabVIEW 会给出警告，并把这个 VI 存成能容纳它全部功能的最早版本——也就是说这一份会悄悄变高。设完保存版本之后，仍然要抽查几个关键 VI 的源版本。
-
-## 顺带：LabVIEW、Windows 和驱动包的兼容
-
-原文还讲了一段开发环境本身的兼容——不同版本的 LabVIEW 对 Windows 的要求不同，NI-VISA、DAQmx 这些驱动包也各自有支持的系统范围。装之前把三者对一遍：LabVIEW 版本、操作系统版本、驱动包版本要互相认，否则装完只能用一半。
-
-![NI-VISA 下载页右侧列出的受支持操作系统](/images/labview-version-downgrade/03-ni-visa.png)
-
-下面两张是原文的对照表，一张按 LabVIEW 版本看能装在哪些 Windows 上，一张反过来按 Windows 版本查能装哪个 LabVIEW。表是截图，原样留在这里。
-
-![LabVIEW 版本与 Windows 版本的对照表](/images/labview-version-downgrade/04-labview-windows.png)
-
-![按 Windows 版本查 LabVIEW 版本的对照表](/images/labview-version-downgrade/05-windows-labview.png)
 
 > 来源：CSDN 博主「软嘴唇0220」《代码在不同版本Labview中如何使用，以及常用资源包的兼容性》，https://blog.csdn.net/m0_51259350/article/details/133947063 ，CC 4.0 BY-SA。原文以 LabVIEW 2016 为例，本文按 25.0 到 19.0 重写步骤；图片已转存到本站，原文链接失效也不影响阅读。版本回退的上下限与警告行为另据 NI 知识库《Saving LabVIEW Files to a Previous Version》核对。
 
